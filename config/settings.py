@@ -128,6 +128,10 @@ STATICFILES_DIRS = [BASE_DIR / 'Follio' / 'folio']
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+UPLOAD_IMAGE_MAX_WIDTH = int(os.environ.get('UPLOAD_IMAGE_MAX_WIDTH', '0'))
+UPLOAD_IMAGE_MAX_HEIGHT = int(os.environ.get('UPLOAD_IMAGE_MAX_HEIGHT', '0'))
+UPLOAD_IMAGE_JPEG_QUALITY = int(os.environ.get('UPLOAD_IMAGE_JPEG_QUALITY', '80'))
+UPLOAD_IMAGE_USE_TINYPNG = os.environ.get('UPLOAD_IMAGE_USE_TINYPNG', '0').lower() in {'1', 'true', 'yes', 'on'}
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field

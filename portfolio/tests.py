@@ -1,10 +1,12 @@
 import shutil
 import tempfile
+from io import BytesIO
 from pathlib import Path
 from django.test import TestCase
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import override_settings
 from django.urls import reverse
+from PIL import Image
 from unittest.mock import patch
 
 from .models import BlogPost, ContactMessage, Project, SiteSettings
@@ -13,7 +15,13 @@ from .models import BlogPost, ContactMessage, Project, SiteSettings
 TEST_MEDIA_ROOT = Path(tempfile.gettempdir()) / 'my-web-test-media'
 
 
-@override_settings(MEDIA_ROOT=TEST_MEDIA_ROOT)
+@override_settings(
+    MEDIA_ROOT=TEST_MEDIA_ROOT,
+    UPLOAD_IMAGE_MAX_WIDTH=0,
+    UPLOAD_IMAGE_MAX_HEIGHT=0,
+    UPLOAD_IMAGE_JPEG_QUALITY=80,
+    UPLOAD_IMAGE_USE_TINYPNG=False,
+)
 class PortfolioSmokeTests(TestCase):
     @classmethod
     def tearDownClass(cls):
@@ -50,6 +58,13 @@ class PortfolioSmokeTests(TestCase):
             image_path='assets/images/blog/1.jpg',
         )
 
+    @staticmethod
+    def build_uploaded_image(size=(1400, 900), color=(200, 80, 80)):
+        buffer = BytesIO()
+        image = Image.new('RGB', size, color)
+        image.save(buffer, format='JPEG', quality=95)
+        return buffer.getvalue()
+
     def test_home_page_renders(self):
         response = self.client.get(reverse('home'))
         self.assertEqual(response.status_code, 200)
@@ -61,12 +76,18 @@ class PortfolioSmokeTests(TestCase):
 
     def test_uploaded_about_image_overrides_static_fallback(self):
         settings = SiteSettings.objects.first()
+        uploaded_image = self.build_uploaded_image()
         settings.about_image_file = SimpleUploadedFile(
             'about-upload.jpg',
-            b'uploaded-about-image',
+            uploaded_image,
             content_type='image/jpeg',
         )
         settings.save()
+
+        with Image.open(settings.about_image_file.path) as saved_image:
+            self.assertEqual(saved_image.width, 1400)
+            self.assertEqual(saved_image.height, 900)
+        self.assertLess(Path(settings.about_image_file.path).stat().st_size, len(uploaded_image))
 
         response = self.client.get(reverse('about'))
 

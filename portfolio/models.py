@@ -1,9 +1,15 @@
+import logging
+
+from django.conf import settings
 from django.db import models
 from django.templatetags.static import static
 from django.utils import timezone
 from django.utils.text import slugify
 
 from .translation_utils import DEFAULT_LANGUAGE, LANGUAGE_CHOICES, normalize_language_code
+
+
+logger = logging.getLogger(__name__)
 
 
 def build_unique_slug(instance, source_value, slug_field_name='slug'):
@@ -34,6 +40,55 @@ class AssetFallbackMixin:
         return static(fallback_path)
 
 
+class UploadedImageOptimizationMixin(models.Model):
+    class Meta:
+        abstract = True
+
+    def _pending_uploaded_file_field_names(self):
+        pending_fields = []
+        for field in self._meta.fields:
+            if not isinstance(field, models.FileField):
+                continue
+            field_file = getattr(self, field.name, None)
+            if field_file and not field_file._committed:
+                pending_fields.append(field.name)
+        return pending_fields
+
+    def _optimize_uploaded_images(self, field_names):
+        if not field_names:
+            return
+
+        try:
+            from image_compressor import compress_uploaded_image
+        except Exception as exc:  # pragma: no cover - import environment issue
+            logger.warning('Image compressor could not be imported: %s', exc)
+            return
+
+        for field_name in field_names:
+            field_file = getattr(self, field_name, None)
+            if not field_file:
+                continue
+            result = compress_uploaded_image(
+                field_file,
+                jpeg_quality=getattr(settings, 'UPLOAD_IMAGE_JPEG_QUALITY', 85),
+                max_width=getattr(settings, 'UPLOAD_IMAGE_MAX_WIDTH', 1600),
+                max_height=getattr(settings, 'UPLOAD_IMAGE_MAX_HEIGHT', 1600),
+                use_tinypng=getattr(settings, 'UPLOAD_IMAGE_USE_TINYPNG', False),
+            )
+            if not result.get('success'):
+                logger.warning(
+                    'Uploaded image optimization failed for %s.%s: %s',
+                    self.__class__.__name__,
+                    field_name,
+                    result.get('message'),
+                )
+
+    def save(self, *args, **kwargs):
+        pending_fields = self._pending_uploaded_file_field_names()
+        super().save(*args, **kwargs)
+        self._optimize_uploaded_images(pending_fields)
+
+
 class TimeStampedModel(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -55,7 +110,7 @@ class TranslatableModel(models.Model):
         return getattr(self, field_name, '')
 
 
-class SiteSettings(AssetFallbackMixin, TimeStampedModel, TranslatableModel):
+class SiteSettings(UploadedImageOptimizationMixin, AssetFallbackMixin, TimeStampedModel, TranslatableModel):
     site_name = models.CharField(max_length=120, default='Follio Studio')
     site_name_ru = models.CharField(max_length=120, blank=True)
     site_name_uz = models.CharField(max_length=120, blank=True)
@@ -193,7 +248,7 @@ class Skill(TimeStampedModel, TranslatableModel):
         return f'{self.name} ({self.percentage}%)'
 
 
-class Service(AssetFallbackMixin, TimeStampedModel, TranslatableModel):
+class Service(UploadedImageOptimizationMixin, AssetFallbackMixin, TimeStampedModel, TranslatableModel):
     title = models.CharField(max_length=120)
     title_ru = models.CharField(max_length=120, blank=True)
     title_uz = models.CharField(max_length=120, blank=True)
@@ -220,7 +275,7 @@ class Service(AssetFallbackMixin, TimeStampedModel, TranslatableModel):
         return self.title
 
 
-class Award(AssetFallbackMixin, TimeStampedModel, TranslatableModel):
+class Award(UploadedImageOptimizationMixin, AssetFallbackMixin, TimeStampedModel, TranslatableModel):
     title = models.CharField(max_length=120)
     title_ru = models.CharField(max_length=120, blank=True)
     title_uz = models.CharField(max_length=120, blank=True)
@@ -242,7 +297,7 @@ class Award(AssetFallbackMixin, TimeStampedModel, TranslatableModel):
         return self.title
 
 
-class Project(AssetFallbackMixin, TimeStampedModel, TranslatableModel):
+class Project(UploadedImageOptimizationMixin, AssetFallbackMixin, TimeStampedModel, TranslatableModel):
     title = models.CharField(max_length=150)
     title_ru = models.CharField(max_length=150, blank=True)
     title_uz = models.CharField(max_length=150, blank=True)
@@ -284,7 +339,7 @@ class Project(AssetFallbackMixin, TimeStampedModel, TranslatableModel):
         return self.title
 
 
-class Testimonial(AssetFallbackMixin, TimeStampedModel, TranslatableModel):
+class Testimonial(UploadedImageOptimizationMixin, AssetFallbackMixin, TimeStampedModel, TranslatableModel):
     name = models.CharField(max_length=120)
     name_ru = models.CharField(max_length=120, blank=True)
     name_uz = models.CharField(max_length=120, blank=True)
@@ -312,7 +367,7 @@ class Testimonial(AssetFallbackMixin, TimeStampedModel, TranslatableModel):
         return self.name
 
 
-class BlogPost(AssetFallbackMixin, TimeStampedModel, TranslatableModel):
+class BlogPost(UploadedImageOptimizationMixin, AssetFallbackMixin, TimeStampedModel, TranslatableModel):
     title = models.CharField(max_length=160)
     title_ru = models.CharField(max_length=160, blank=True)
     title_uz = models.CharField(max_length=160, blank=True)
