@@ -1,0 +1,37 @@
+{% extends 'portfolio/base.html' %}
+{% load static translation_tags %}
+
+{% block title %}{{ post|tr:'title' }} | {{ site_settings|tr:'site_name' }}{% endblock %}
+
+{% block content %}
+{% include 'portfolio/partials/page_header.html' with title=post|tr:'title' subtitle=post|tr:'author_name' %}
+
+<section class="bg-[#070640] py-[100px] md:py-[90px] sm:py-[80px]">
+    <div class="wraper">
+        <div class="grid grid-cols-12 gap-8 lg:gap-3">
+            <div class="col-span-8 md:col-span-12">
+                <img class="w-full rounded-[5px]" src="{{ post|asset_url:'image_path' }}" alt="{{ post.title }}">
+                <div class="mt-[35px]">
+                    <span class="text-[#fe3e57] block mb-[12px]">{{ post.published_at|date:"M d, Y" }} {{ ui_text.by|lower }} {{ post|tr:'author_name' }}</span>
+                    <h1 class="text-[#fff] text-[48px] md:text-[36px] sm:text-[28px] font-bold mb-[25px]">{{ post|tr:'title' }}</h1>
+                    <div class="text-[#c7c6c6] leading-[32px] text-[18px]">{{ post|tr:'content'|linebreaks }}</div>
+                </div>
+            </div>
+            <div class="col-span-4 md:col-span-12">
+                <div class="bg-[#0c0b44] border border-[#252568] rounded-[5px] p-[35px]">
+                    <h3 class="text-[#fff] text-[30px] font-bold mb-[20px]">{{ ui_text.more_articles }}</h3>
+                    {% for related in related_posts %}
+                    <div class="{% if not forloop.last %}mb-[20px] pb-[20px] border-b border-[#252568]{% endif %}">
+                        <span class="text-[#fe3e57] text-[13px]">{{ related.published_at|date:"M d, Y" }}</span>
+                        <h4 class="text-[#fff] text-[22px] font-bold mt-[8px] mb-[10px]">{{ related|tr:'title' }}</h4>
+                        <a class="text-[#fa5d72]" href="{% url 'blog_detail' related.slug %}">{{ ui_text.read_more }}</a>
+                    </div>
+                    {% empty %}
+                    <p class="text-[#c7c6c6]">{{ ui_text.add_blog_posts }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

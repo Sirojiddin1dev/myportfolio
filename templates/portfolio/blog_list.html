@@ -1,0 +1,30 @@
+{% extends 'portfolio/base.html' %}
+{% load static translation_tags %}
+
+{% block title %}{{ ui_text.blog }} | {{ site_settings|tr:'site_name' }}{% endblock %}
+
+{% block content %}
+{% include 'portfolio/partials/page_header.html' with title=ui_text.blog subtitle=ui_text.latest_notes_ideas_and_updates %}
+
+<section class="bg-[#070640] py-[100px] md:py-[90px] sm:py-[80px]">
+    <div class="wraper">
+        <div class="grid grid-cols-12 gap-8 lg:gap-3">
+            {% for post in posts %}
+            <div class="col-span-4 md:col-span-6 sm:col-span-12">
+                <div class="bg-[#0c0b44] border border-[#252568] rounded-[5px] overflow-hidden h-full">
+                    <img class="w-full" src="{{ post|asset_url:'image_path' }}" alt="{{ post.title }}">
+                    <div class="p-[30px]">
+                        <span class="text-[#fe3e57] block mb-[10px]">{{ post.published_at|date:"M d, Y" }} {{ ui_text.by|lower }} {{ post|tr:'author_name' }}</span>
+                        <h2 class="text-[#fff] text-[28px] font-bold mb-[15px]">{{ post|tr:'title' }}</h2>
+                        <p class="text-[#c7c6c6] leading-[30px] mb-[20px]">{{ post|tr:'summary' }}</p>
+                        <a class="theme-btn" href="{% url 'blog_detail' post.slug %}">{{ ui_text.read_article }}</a>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-span-12 text-[#fff] text-center">{{ ui_text.no_blog_posts }}</div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,88 @@
+{% extends 'portfolio/base.html' %}
+{% load static translation_tags %}
+
+{% block title %}{{ ui_text.about }} | {{ site_settings|tr:'site_name' }}{% endblock %}
+
+{% block content %}
+{% include 'portfolio/partials/page_header.html' with title=ui_text.about subtitle=ui_text.creative_profile_and_capabilities %}
+
+<section class="bg-[#070640] py-[100px] md:py-[90px] sm:py-[80px]">
+    <div class="wraper">
+        <div class="grid grid-cols-12 gap-8 lg:gap-3 items-center">
+            <div class="col-span-6 md:col-span-12">
+                <img class="w-full" src="{{ site_settings|asset_url:'about_image' }}" alt="About image">
+            </div>
+            <div class="col-span-6 md:col-span-12">
+                <h2 class="text-[60px] md:text-[40px] sm:text-[30px] text-[#fff] font-bold mb-[30px]">{{ site_settings|tr:'about_title' }}</h2>
+                <p class="text-[#c7c6c6] text-[17px] leading-[32px] mb-[20px]">{{ site_settings|tr:'about_description' }}</p>
+                <div class="grid grid-cols-2 sm:grid-cols-1 gap-[20px] mt-[40px]">
+                    <div class="bg-[#0c0b44] rounded-[5px] p-[25px] border border-[#252568]">
+                        <span class="text-[#fe3e57] block mb-[8px]">{{ ui_text.experience_label }}</span>
+                        <h3 class="text-[#fff] text-[30px] font-bold">{{ site_settings.experience_years }}+ {{ ui_text.years|lower }}</h3>
+                    </div>
+                    <div class="bg-[#0c0b44] rounded-[5px] p-[25px] border border-[#252568]">
+                        <span class="text-[#fe3e57] block mb-[8px]">{{ ui_text.contact_label }}</span>
+                        <h3 class="text-[#fff] text-[22px] font-bold">{{ site_settings.contact_email }}</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="bg-[#0c0b48] py-[100px] md:py-[90px] sm:py-[80px]">
+    <div class="wraper">
+        <h2 class="text-[70px] md:text-[45px] sm:text-[30px] mb-[60px] text-[#fff] font-bold base-font text-left">{{ ui_text.skills }}</h2>
+        <div class="grid grid-cols-12 gap-8 lg:gap-3">
+            {% for skill in skills %}
+            <div class="col-span-4 md:col-span-6 sm:col-span-12">
+                <div class="rounded-[5px] border border-[#252568] bg-[rgba(24,23,89,.61)] p-[30px] h-full">
+                    <span class="text-[14px] uppercase tracking-[2px]" style="color: {{ skill.accent_color }};">{{ ui_text.capability }}</span>
+                    <h3 class="text-[#fff] text-[28px] font-bold mt-[10px] mb-[15px]">{{ skill|tr:'name' }}</h3>
+                    <div class="h-[8px] bg-[#252568] rounded-full overflow-hidden">
+                        <div class="h-full rounded-full" style="width: {{ skill.percentage }}%; background: {{ skill.accent_color }};"></div>
+                    </div>
+                    <p class="text-[#c7c6c6] mt-[15px]">{{ skill.percentage }}% {{ ui_text.proficiency }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<section class="bg-[#070640] py-[100px] md:py-[90px] sm:py-[80px]">
+    <div class="wraper">
+        <h2 class="text-[70px] md:text-[45px] sm:text-[30px] mb-[60px] text-[#fff] font-bold base-font text-left">{{ ui_text.services }}</h2>
+        <div class="grid grid-cols-12 gap-8 lg:gap-3">
+            {% for service in services %}
+            <div class="col-span-6 md:col-span-12">
+                <div class="bg-[#0c0b44] border border-[#252568] rounded-[5px] p-[35px] flex items-start sm:block h-full">
+                    <div class="mr-[25px] sm:mr-0 sm:mb-[20px] w-[120px] h-[120px] rounded-[20px] bg-no-repeat bg-center bg-[#fff]" style="background-image: url('{{ service|asset_url:'background_shape_path' }}');">
+                        <div class="text-center leading-[120px]">
+                            <i class="text-[#181764] text-[48px] {{ service.icon_class }}"></i>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="text-[#fff] text-[32px] font-bold mb-[15px]">{{ service|tr:'title' }}</h3>
+                        <p class="text-[#c7c6c6] leading-[30px]">{{ service|tr:'description' }}</p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<section class="bg-[#0c0b48] py-[100px] md:py-[90px] sm:py-[80px]">
+    <div class="wraper">
+        <h2 class="text-[70px] md:text-[45px] sm:text-[30px] mb-[60px] text-[#fff] font-bold base-font text-left">{{ ui_text.awards }}</h2>
+        <div class="grid grid-cols-12 gap-8 lg:gap-3">
+            {% for award in awards %}
+            <div class="col-span-6 md:col-span-6 sm:col-span-12">
+                <img class="w-full rounded-[5px]" src="{{ award|asset_url:'image_path' }}" alt="{{ award.title }}">
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,85 @@
+{% load translation_tags %}
+<section class="pt-[120px] md:pt-[90px] bg-[#070640] pb-[60px]">
+    <div class="wraper">
+        <h2 class="text-[70px] md:text-[45px] sm:text-[30px] mb-[60px] text-[#fff] font-bold base-font text-center">{{ site_settings|tr:'call_to_action_text' }}</h2>
+        <div class="grid grid-cols-12 gap-8 lg:gap-3">
+            <div class="col-span-1 md:col-span-12"></div>
+            <div class="col-span-5 md:col-span-12 sm:col-span-12">
+                <div class="bg-[#0c0b44] border-[1px] border-[#464646] mb-[60px] pl-[60px] pr-[60px] pt-[60px] pb-[30px] sm:p-[25px] rounded-[5px] shadow-[0_5px_15px_0_rgba(68,68,68,0.1)]">
+                    <h2 class="text-center text-[30px] xl:text-[18px] md:text-[20px] text-[#fff] font-bold mb-[15px] sm:pt-[20px]">{{ ui_text.get_in_touch }}</h2>
+                    <form method="post" class="contact-validation-active" id="wpo-contact-form">
+                        {% csrf_token %}
+                        {% if contact_form.non_field_errors %}
+                        <div class="mb-[20px] text-[#fe3e57]">{{ contact_form.non_field_errors }}</div>
+                        {% endif %}
+                        <div class="w-[calc(50%-15px)] float-left sm:w-full sm:float-none mb-[15px]">
+                            {{ contact_form.first_name }}
+                            {% if contact_form.first_name.errors %}<div class="mt-[5px] text-[13px] text-[#fe3e57]">{{ contact_form.first_name.errors|join:', ' }}</div>{% endif %}
+                        </div>
+                        <div class="w-[calc(50%-15px)] float-left sm:w-full sm:float-none sm:ml-0 ml-[30px] mb-[15px]">
+                            {{ contact_form.last_name }}
+                            {% if contact_form.last_name.errors %}<div class="mt-[5px] text-[13px] text-[#fe3e57]">{{ contact_form.last_name.errors|join:', ' }}</div>{% endif %}
+                        </div>
+                        <div class="clearfix mb-[15px]">
+                            {{ contact_form.email }}
+                            {% if contact_form.email.errors %}<div class="mt-[5px] text-[13px] text-[#fe3e57]">{{ contact_form.email.errors|join:', ' }}</div>{% endif %}
+                        </div>
+                        <div class="mb-[15px]">
+                            {{ contact_form.subject }}
+                            {% if contact_form.subject.errors %}<div class="mt-[5px] text-[13px] text-[#fe3e57]">{{ contact_form.subject.errors|join:', ' }}</div>{% endif %}
+                        </div>
+                        <div class="mb-[15px]">
+                            {{ contact_form.message }}
+                            {% if contact_form.message.errors %}<div class="mt-[5px] text-[13px] text-[#fe3e57]">{{ contact_form.message.errors|join:', ' }}</div>{% endif %}
+                        </div>
+                        <div class="submit-area w-full text-center mt-[33px] mb-[30px]">
+                            <button type="submit" class="theme-btn submit-btn bg-[#fe3e57]">{{ ui_text.send_message }}</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="col-span-5 md:col-span-8 sm:col-span-12">
+                <div class="pl-[20px] pr-[50px] sm:p-0">
+                    <div class="py-[30px] px-[40px] sm:py-[20px] sm:px-[20px] mb-[30px] bg-[#0c0b44] border-[1px] border-[#464646] rounded-[5px] shadow-[0_10px_40px_0_rgba(50,50,50,0.1)]">
+                        <h2 class="text-[24px] sm:text-[20px] text-[#fff] font-bold mb-[15px] heading-font">{{ site_settings|tr:'office_address' }}</h2>
+                        <div class="flex items-center">
+                            <div class="w-[90px] h-[90px] bg-[#fff] leading-[90px] rounded-[50%] text-center mr-[20px] shadow-[0_10px_40px_0_rgba(50,50,50,0.1)]">
+                                <i class="text-[40px] text-[#fe3e57] fi flaticon-worldwide"></i>
+                            </div>
+                            <div>
+                                <span class="text-[#8c8b8b] text-[18px] font-light">{{ ui_text.office_address }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="pl-[20px] pr-[50px] sm:p-0">
+                    <div class="py-[30px] px-[40px] sm:py-[20px] sm:px-[20px] mb-[30px] bg-[#0c0b44] border-[1px] border-[#464646] rounded-[5px] shadow-[0_10px_40px_0_rgba(50,50,50,0.1)]">
+                        <h2 class="text-[24px] sm:text-[20px] text-[#fff] font-bold mb-[15px] heading-font">{{ site_settings.contact_email }}</h2>
+                        <div class="flex items-center">
+                            <div class="w-[90px] h-[90px] bg-[#fff] leading-[90px] rounded-[50%] text-center mr-[20px] shadow-[0_10px_40px_0_rgba(50,50,50,0.1)]">
+                                <i class="text-[40px] text-[#fe3e57] fi flaticon-mail"></i>
+                            </div>
+                            <div>
+                                <span class="text-[#8c8b8b] text-[18px] font-light">{{ ui_text.official_mail }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="pl-[20px] pr-[50px] sm:p-0">
+                    <div class="py-[30px] px-[40px] sm:py-[20px] sm:px-[20px] mb-[30px] md:mb-0 bg-[#0c0b44] border-[1px] border-[#464646] rounded-[5px] shadow-[0_10px_40px_0_rgba(50,50,50,0.1)]">
+                        <h2 class="text-[24px] sm:text-[20px] text-[#fff] font-bold mb-[15px] heading-font">{{ site_settings.contact_phone }}</h2>
+                        <div class="flex items-center">
+                            <div class="w-[90px] h-[90px] bg-[#fff] leading-[90px] rounded-[50%] text-center mr-[20px] shadow-[0_10px_40px_0_rgba(50,50,50,0.1)]">
+                                <i class="text-[40px] text-[#fe3e57] fi flaticon-phone"></i>
+                            </div>
+                            <div>
+                                <span class="text-[#8c8b8b] text-[18px] font-light">{{ ui_text.official_phone }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-span-1 md:col-span-12"></div>
+        </div>
+    </div>
+</section>

@@ -1,0 +1,64 @@
+{% extends 'portfolio/base.html' %}
+{% load static translation_tags %}
+
+{% block title %}{{ project|tr:'title' }} | {{ site_settings|tr:'site_name' }}{% endblock %}
+
+{% block content %}
+{% include 'portfolio/partials/page_header.html' with title=project|tr:'title' subtitle=project|tr:'category' %}
+
+<section class="bg-[#070640] py-[100px] md:py-[90px] sm:py-[80px]">
+    <div class="wraper">
+        <div class="grid grid-cols-12 gap-8 lg:gap-3 items-start">
+            <div class="col-span-8 md:col-span-12">
+                <img class="w-full rounded-[5px]" src="{{ project|asset_url:'image_path' }}" alt="{{ project.title }}">
+                <div class="mt-[40px]">
+                    <h2 class="text-[#fff] text-[48px] md:text-[36px] sm:text-[28px] font-bold mb-[20px]">{{ project|tr:'title' }}</h2>
+                    <p class="text-[#c7c6c6] text-[18px] leading-[32px]">{{ project|tr:'description' }}</p>
+                </div>
+            </div>
+            <div class="col-span-4 md:col-span-12">
+                <div class="bg-[#0c0b44] border border-[#252568] rounded-[5px] p-[35px]">
+                    <h3 class="text-[#fff] text-[30px] font-bold mb-[25px]">{{ ui_text.project_info }}</h3>
+                    <div class="mb-[20px]">
+                        <span class="text-[#fe3e57] block mb-[6px]">{{ ui_text.category }}</span>
+                        <span class="text-[#fff]">{{ project|tr:'category' }}</span>
+                    </div>
+                    {% if project.client_name %}
+                    <div class="mb-[20px]">
+                        <span class="text-[#fe3e57] block mb-[6px]">{{ ui_text.client }}</span>
+                        <span class="text-[#fff]">{{ project|tr:'client_name' }}</span>
+                    </div>
+                    {% endif %}
+                    <div class="mb-[25px]">
+                        <span class="text-[#fe3e57] block mb-[6px]">{{ ui_text.summary }}</span>
+                        <span class="text-[#fff]">{{ project|tr:'short_description' }}</span>
+                    </div>
+                    {% if project.project_url %}
+                    <a class="theme-btn" href="{{ project.project_url }}" target="_blank" rel="noreferrer">{{ ui_text.open_project }}</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        {% if related_projects %}
+        <div class="mt-[90px]">
+            <h3 class="text-[#fff] text-[42px] md:text-[32px] font-bold mb-[40px]">{{ ui_text.related_projects }}</h3>
+            <div class="grid grid-cols-12 gap-8 lg:gap-3">
+                {% for related in related_projects %}
+                <div class="col-span-4 md:col-span-6 sm:col-span-12">
+                    <div class="bg-[#0c0b44] border border-[#252568] rounded-[5px] overflow-hidden h-full">
+                        <img class="w-full" src="{{ related|asset_url:'image_path' }}" alt="{{ related.title }}">
+                        <div class="p-[25px]">
+                            <h4 class="text-[#fff] text-[24px] font-bold mb-[10px]">{{ related|tr:'title' }}</h4>
+                            <p class="text-[#c7c6c6] mb-[20px]">{{ related|tr:'short_description' }}</p>
+                            <a class="protfolio-btn" href="{% url 'project_detail' related.slug %}">{{ ui_text.view_work }}</a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

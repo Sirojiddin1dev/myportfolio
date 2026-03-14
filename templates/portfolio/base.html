@@ -1,0 +1,189 @@
+{% load static translation_tags %}
+<!DOCTYPE html>
+<html lang="{{ current_language }}">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% firstof seo.title site_settings|tr:'site_name' %}</title>
+    <meta name="description" content="{% firstof seo.description site_settings|tr:'meta_description' %}">
+    <meta name="robots" content="{{ seo.robots|default:'index,follow' }}">
+    <meta name="author" content="{% firstof seo.author site_settings|tr:'site_name' %}">
+    <link rel="canonical" href="{{ seo.canonical_url|default:current_absolute_url }}">
+    <link rel="shortcut icon" type="image/png" href="{{ site_settings|asset_url:'favicon_image' }}">
+    <meta property="og:site_name" content="{% firstof seo.site_name site_settings|tr:'site_name' %}">
+    <meta property="og:title" content="{% firstof seo.title site_settings|tr:'site_name' %}">
+    <meta property="og:description" content="{% firstof seo.description site_settings|tr:'meta_description' %}">
+    <meta property="og:type" content="{{ seo.og_type|default:'website' }}">
+    <meta property="og:url" content="{{ seo.canonical_url|default:current_absolute_url }}">
+    <meta property="og:locale" content="{{ seo.locale|default:'en_US' }}">
+    {% for locale in seo.alternate_locales %}
+    <meta property="og:locale:alternate" content="{{ locale }}">
+    {% endfor %}
+    {% if seo.image %}
+    <meta property="og:image" content="{{ seo.image }}">
+    <meta property="og:image:alt" content="{{ seo.image_alt }}">
+    {% endif %}
+    {% if seo.published_time %}
+    <meta property="article:published_time" content="{{ seo.published_time }}">
+    {% endif %}
+    {% if seo.modified_time %}
+    <meta property="article:modified_time" content="{{ seo.modified_time }}">
+    <meta property="og:updated_time" content="{{ seo.modified_time }}">
+    {% endif %}
+    <meta name="twitter:card" content="{{ seo.twitter_card|default:'summary' }}">
+    <meta name="twitter:title" content="{% firstof seo.title site_settings|tr:'site_name' %}">
+    <meta name="twitter:description" content="{% firstof seo.description site_settings|tr:'meta_description' %}">
+    {% if seo.image %}
+    <meta name="twitter:image" content="{{ seo.image }}">
+    {% endif %}
+    <link href="{% static 'assets/css/themify-icons.css' %}" rel="stylesheet">
+    <link href="{% static 'assets/css/font-awesome.min.css' %}" rel="stylesheet">
+    <link href="{% static 'assets/css/flaticon.css' %}" rel="stylesheet">
+    <link href="{% static 'assets/css/magnific-popup.css' %}" rel="stylesheet">
+    <link href="{% static 'assets/css/animate.css' %}" rel="stylesheet">
+    <link href="{% static 'assets/css/owl.carousel.css' %}" rel="stylesheet">
+    <link href="{% static 'assets/css/owl.theme.css' %}" rel="stylesheet">
+    <link href="{% static 'assets/css/slick.css' %}" rel="stylesheet">
+    <link href="{% static 'assets/css/slick-theme.css' %}" rel="stylesheet">
+    <link href="{% static 'assets/css/swiper.min.css' %}" rel="stylesheet">
+    <link href="{% static 'assets/css/owl.transitions.css' %}" rel="stylesheet">
+    <link href="{% static 'assets/css/jquery.fancybox.css' %}" rel="stylesheet">
+    <link href="{% static 'assets/css/odometer-theme-default.css' %}" rel="stylesheet">
+    <link href="{% static 'assets/css/global.css' %}" rel="stylesheet">
+    <link href="{% static 'assets/css/style.css' %}" rel="stylesheet">
+    {% for schema in seo.schemas %}
+    <script type="application/ld+json">{{ schema|safe }}</script>
+    {% endfor %}
+</head>
+<body>
+    <div class="page-wrapper">
+        <div class="preloader">
+            <div class="vertical-centered-box">
+                <div class="content">
+                    <div class="loader-circle"></div>
+                    <div class="loader-line-mask">
+                        <div class="loader-line"></div>
+                    </div>
+                    <img src="{% static 'assets/images/preloader.png' %}" alt="Preloader">
+                </div>
+            </div>
+        </div>
+
+        <section class="{% if active_page == 'home' %}bg-transparent absolute left-0 top-0 w-full{% else %}bg-[#070640]{% endif %} z-50 md:py-[20px]">
+            <div class="wraper">
+                <div class="flex items-center justify-between">
+                    <div id="dl-menu" class="dl-menuwrapper">
+                        <button class="dl-trigger">Open Menu</button>
+                        <ul class="dl-menu">
+                            <li><a href="{% url 'home' %}">{{ ui_text.home }}</a></li>
+                            <li><a href="{% url 'about' %}">{{ ui_text.about }}</a></li>
+                            <li><a href="{% url 'portfolio' %}">{{ ui_text.portfolio }}</a></li>
+                            <li><a href="{% url 'blog_list' %}">{{ ui_text.blog }}</a></li>
+                            <li><a href="{% url 'contact' %}">{{ ui_text.contact }}</a></li>
+                            <li><a href="/admin/">{{ ui_text.admin }}</a></li>
+                            {% for code, label in available_languages %}
+                            <li><a href="{% url 'switch_language' language_code=code %}?next={{ request.path }}">{{ code|upper }}</a></li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    <div class="w-[195px] md:w-[280px] sm:w-[200px] col:w-[150px]">
+                        <a class="flex items-center md:justify-center text-white" href="{% url 'home' %}">
+                            <img class="mr-[10px] max-h-[52px] w-auto max-w-full object-contain" src="{{ site_settings|asset_url:'logo_image' }}" alt="{{ site_settings|tr:'brand_name' }}">
+                        </a>
+                    </div>
+                    <ul class="md:hidden">
+                        <li class="relative inline-block">
+                            <a href="{% url 'home' %}" class="relative text-[16px] lg:text-[14px] py-[35px] xl:py-[30px] px-[20px] xl:px-[6px] {% if active_page == 'home' %}text-[#fe3e57]{% else %}text-white{% endif %} block capitalize font-base-font font-medium transition-all hover:text-[#fe3e57]">{{ ui_text.home }}</a>
+                        </li>
+                        <li class="relative inline-block">
+                            <a href="{% url 'about' %}" class="relative text-[16px] lg:text-[14px] py-[35px] xl:py-[30px] px-[20px] xl:px-[6px] {% if active_page == 'about' %}text-[#fe3e57]{% else %}text-white{% endif %} block capitalize font-base-font font-medium transition-all hover:text-[#fe3e57]">{{ ui_text.about }}</a>
+                        </li>
+                        <li class="relative inline-block">
+                            <a href="{% url 'portfolio' %}" class="relative text-[16px] lg:text-[14px] py-[35px] xl:py-[30px] px-[20px] xl:px-[6px] {% if active_page == 'portfolio' %}text-[#fe3e57]{% else %}text-white{% endif %} block capitalize font-base-font font-medium transition-all hover:text-[#fe3e57]">{{ ui_text.portfolio }}</a>
+                        </li>
+                        <li class="relative inline-block">
+                            <a href="{% url 'blog_list' %}" class="relative text-[16px] lg:text-[14px] py-[35px] xl:py-[30px] px-[20px] xl:px-[6px] {% if active_page == 'blog' %}text-[#fe3e57]{% else %}text-white{% endif %} block capitalize font-base-font font-medium transition-all hover:text-[#fe3e57]">{{ ui_text.blog }}</a>
+                        </li>
+                        <li class="relative inline-block">
+                            <a href="{% url 'contact' %}" class="relative text-[16px] lg:text-[14px] py-[35px] xl:py-[30px] px-[20px] xl:px-[6px] {% if active_page == 'contact' %}text-[#fe3e57]{% else %}text-white{% endif %} block capitalize font-base-font font-medium transition-all hover:text-[#fe3e57]">{{ ui_text.contact }}</a>
+                        </li>
+                    </ul>
+                    <div class="flex items-center gap-[12px]">
+                        <div class="hidden lg:flex items-center gap-[8px]">
+                            {% for code, label in available_languages %}
+                            <a href="{% url 'switch_language' language_code=code %}?next={{ request.path }}" class="inline-flex h-[36px] w-[36px] items-center justify-center rounded-full border border-[#3840a9] text-[12px] font-semibold text-white {% if current_language == code %}bg-[#fe3e57] border-[#fe3e57]{% endif %}">{{ code|upper }}</a>
+                            {% endfor %}
+                        </div>
+                        <a class="theme-btn col:hidden" href="{% url 'contact' %}">{{ site_settings|tr:'call_to_action_text' }}</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        {% if messages %}
+        <section class="{% if active_page == 'home' %}bg-[#070640] pt-[120px] pb-[10px]{% else %}bg-[#070640] py-[20px]{% endif %}">
+            <div class="wraper">
+                {% for message in messages %}
+                <div class="rounded-[5px] border border-[#fe3e57] bg-[rgba(254,62,87,0.08)] px-[20px] py-[15px] text-[#fff]">
+                    {{ message }}
+                </div>
+                {% endfor %}
+            </div>
+        </section>
+        {% endif %}
+
+        {% block content %}{% endblock %}
+
+        <footer class="bg-[#121151]">
+            <div class="wraper">
+                <div class="py-[50px]">
+                    <div class="grid grid-cols-12 gap-8 lg:gap-3">
+                        <div class="col-span-2 md:col-span-4 sm:col-span-12">
+                            <div class="mt-[20px] sm:mt-[0px]">
+                                <img class="max-h-[58px] w-auto max-w-full object-contain sm:mx-auto" src="{{ site_settings|asset_url:'footer_logo_image' }}" alt="{{ site_settings|tr:'brand_name' }}">
+                            </div>
+                        </div>
+                        <div class="col-span-6 md:col-span-8 sm:col-span-12">
+                            <div class="mt-[35px] text-center">
+                                <ul class="mb-[10px]">
+                                    <li class="inline-block"><a class="text-[#fff] px-[30px] sm:px-[10px] py-[10px] text-[15px] font-normal" href="{% url 'about' %}">{{ ui_text.about }}</a></li>
+                                    <li class="inline-block"><a class="text-[#fff] px-[30px] sm:px-[10px] py-[10px] text-[15px] font-normal" href="{% url 'portfolio' %}">{{ ui_text.portfolio }}</a></li>
+                                    <li class="inline-block"><a class="text-[#fff] px-[30px] sm:px-[10px] py-[10px] text-[15px] font-normal" href="{% url 'blog_list' %}">{{ ui_text.blog }}</a></li>
+                                    <li class="inline-block"><a class="text-[#fff] pl-[30px] sm:px-[10px] py-[10px] pr-[0px] text-[15px] font-normal" href="{% url 'contact' %}">{{ ui_text.contact }}</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-span-4 md:col-span-12 sm:col-span-12">
+                            <div class="text-right md:text-center md:mt-[30px]">
+                                <ul class="flex items-end md:items-center md:w-full md:justify-center">
+                                    {% for social in social_links|slice:":3" %}
+                                    <li class="{% if not forloop.last %}mr-[30px]{% endif %}">
+                                        <a href="{{ social.url|default:'#' }}" class="block w-[80px] h-[80px] leading-[85px] sm:w-[60px] sm:h-[60px] sm:leading-[65px] border-[1px] border-[#3840a9] text-center rounded-[50%]">
+                                            <i class="{{ social.icon_class }} text-[30px] sm:text-[20px]" style="color: {{ social.accent_color }};"></i>
+                                        </a>
+                                    </li>
+                                    {% empty %}
+                                    <li class="text-[#fff]">{{ ui_text.add_social_links }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="py-[30px] bg-[#0d0c4c] text-center">
+                <span class="text-[#fff]">{{ site_settings|tr:'copyright_text' }}</span>
+            </div>
+        </footer>
+    </div>
+
+    <script src="{% static 'assets/js/jquery.min.js' %}"></script>
+    <script src="{% static 'assets/js/modernizr.custom.js' %}"></script>
+    <script src="{% static 'assets/js/jquery.dlmenu.js' %}"></script>
+    <script src="{% static 'assets/js/jquery-plugin-collection.js' %}"></script>
+    <script src="{% static 'assets/js/tw-elements.umd.min.js' %}"></script>
+    <script src="{% static 'assets/js/moving-animation.js' %}"></script>
+    <script src="{% static 'assets/js/script.js' %}"></script>
+</body>
+</html>

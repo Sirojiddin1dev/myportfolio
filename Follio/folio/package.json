@@ -1,0 +1,19 @@
+{
+  "name": "tailwind",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "tailwindcss -i ./assets/input.css -o ./assets/css/style.css -w"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "tailwind-clip-path": "^1.0.0",
+    "tailwindcss": "^3.3.3"
+  },
+  "dependencies": {
+    "tw-elements": "^1.0.0-alpha13"
+  }
+}

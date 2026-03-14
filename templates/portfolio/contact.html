@@ -1,0 +1,9 @@
+{% extends 'portfolio/base.html' %}
+{% load translation_tags %}
+
+{% block title %}{{ ui_text.contact }} | {{ site_settings|tr:'site_name' }}{% endblock %}
+
+{% block content %}
+{% include 'portfolio/partials/page_header.html' with title=ui_text.contact subtitle=ui_text.start_conversation_about_your_next_project %}
+{% include 'portfolio/partials/contact_section.html' %}
+{% endblock %}
