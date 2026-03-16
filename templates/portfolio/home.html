@@ -8,7 +8,7 @@
 {% endblock %}
 
 {% block content %}
-<section class="relative min-h-[860px] md:min-h-[680px] sm:min-h-[560px] overflow-hidden bg-[#070640]">
+<section class="relative min-h-[860px] md:min-h-[700px] sm:min-h-[620px] overflow-hidden bg-[#070640]">
     <div class="absolute inset-0">
         <img
             class="site-hero-image h-full w-full opacity-[0.22]"
@@ -22,21 +22,27 @@
         >
         <div class="site-fade-surface absolute inset-0"></div>
     </div>
-    <div class="relative wraper pt-[180px] md:pt-[150px] sm:pt-[130px] pb-[90px]">
+    <div class="relative wraper pt-[250px] xl:pt-[220px] md:pt-[180px] sm:pt-[150px] pb-[100px] sm:pb-[70px]">
         <div class="grid grid-cols-12 gap-8 lg:gap-3 items-end">
-            <div class="col-span-8 md:col-span-12">
-                <h1 class="text-[85px] leading-[0.95] xl:text-[64px] md:text-[52px] sm:text-[38px] sm:leading-[1.05] text-[#fff] font-bold">
-                    {{ site_settings|tr:'hero_pre_title' }} <span class="text-[#fe3e57]">{{ site_settings|tr:'hero_highlight_name' }}</span> {{ site_settings|tr:'hero_name_suffix' }}
-                </h1>
-                <p class="text-[30px] md:text-[24px] sm:text-[20px] text-[#fff] font-semibold mt-[34px] max-w-[720px]">{{ site_settings|tr:'hero_role' }}</p>
-                <div class="mt-[36px] flex flex-wrap items-center gap-[18px]">
+            <div class="col-span-9 xl:col-span-10 md:col-span-12">
+                <div class="max-w-[860px]">
+                    <span class="mb-[18px] inline-flex rounded-full border border-[rgba(255,255,255,0.14)] bg-[rgba(255,255,255,0.06)] px-[16px] py-[8px] text-[13px] font-semibold uppercase tracking-[0.24em] text-[#d8d8e6] sm:mb-[14px]">
+                        {{ site_settings|tr:'hero_pre_title' }}
+                    </span>
+                    <h1 class="max-w-[820px] text-[72px] leading-[0.94] tracking-[-0.04em] xl:text-[60px] lg:text-[54px] md:text-[46px] sm:max-w-full sm:text-[36px] sm:leading-[1.02] text-[#fff] font-bold">
+                        <span class="text-[#fe3e57]">{{ site_settings|tr:'hero_highlight_name' }}</span>
+                        <span class="text-[#fff]"> {{ site_settings|tr:'hero_name_suffix' }}</span>
+                    </h1>
+                </div>
+                <p class="text-[30px] md:text-[24px] sm:text-[20px] text-[#fff] font-semibold mt-[28px] max-w-[720px]">{{ site_settings|tr:'hero_role' }}</p>
+                <div class="mt-[32px] flex flex-wrap items-center gap-[18px] sm:flex-col sm:items-start">
                     <a href="{% url 'contact' %}" class="theme-btn">{{ site_settings|tr:'call_to_action_text' }}</a>
-                    <div class="site-stat-card inline-flex items-center gap-[16px] rounded-[24px] border border-[rgba(255,255,255,0.12)] bg-[rgba(255,255,255,0.06)] px-[22px] py-[16px]">
+                    <div class="site-stat-card inline-flex items-center gap-[14px] rounded-[24px] border border-[rgba(255,255,255,0.12)] bg-[rgba(255,255,255,0.06)] px-[22px] py-[14px] sm:w-full sm:justify-between">
                         <strong class="text-[30px] font-bold text-[#fff]">{{ site_settings.experience_years }}+</strong>
-                        <span class="text-[15px] uppercase tracking-[2px] text-[#d8d8e6]">{{ ui_text.years }} {{ ui_text.experience }}</span>
+                        <span class="text-[15px] uppercase tracking-[0.18em] text-[#d8d8e6]">{{ ui_text.years }} {{ ui_text.experience }}</span>
                     </div>
                 </div>
-                <ul class="mt-[42px] flex flex-wrap gap-[14px]">
+                <ul class="mt-[34px] flex flex-wrap gap-[14px]">
                     {% for social in social_links|slice:":3" %}
                     <li>
                         {% if social.url %}

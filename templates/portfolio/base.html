@@ -51,9 +51,9 @@
 <body class="bg-[#070640]">
     <a href="#main-content" class="skip-link">Skip to content</a>
     <div class="page-wrapper">
-        <header class="{% if active_page == 'home' %}bg-transparent absolute left-0 top-0 w-full{% else %}bg-[#070640]{% endif %} z-50 md:py-[20px]">
+        <header class="{% if active_page == 'home' %}absolute left-0 top-0 w-full bg-[linear-gradient(180deg,rgba(7,6,64,0.96),rgba(7,6,64,0.82),rgba(7,6,64,0.18),transparent)] backdrop-blur-[2px]{% else %}bg-[#070640]{% endif %} z-50">
             <div class="wraper">
-                <div class="flex items-center justify-between gap-[16px]">
+                <div class="flex items-center justify-between gap-[16px] py-[18px] lg:py-[14px] sm:py-[12px]">
                     <div id="dl-menu" class="dl-menuwrapper">
                         <button class="dl-trigger" type="button" aria-label="Open navigation menu" aria-controls="mobile-navigation" aria-expanded="false" data-menu-trigger>Open Menu</button>
                         <ul id="mobile-navigation" class="dl-menu" data-menu>
@@ -68,10 +68,10 @@
                             {% endfor %}
                         </ul>
                     </div>
-                    <div class="w-[195px] md:w-[280px] sm:w-[200px] col:w-[150px]">
+                    <div class="w-[195px] md:w-[220px] sm:w-[180px] col:w-[150px] shrink-0">
                         <a class="flex items-center md:justify-center text-white" href="{% url 'home' %}" aria-label="{{ site_settings|tr:'brand_name' }}">
                             <img
-                                class="mr-[10px] max-h-[52px] w-auto max-w-full object-contain"
+                                class="mr-[10px] max-h-[44px] w-auto max-w-full object-contain sm:max-h-[38px]"
                                 src="{{ site_settings|asset_url:'logo_image' }}"
                                 alt="{{ site_settings|tr:'brand_name' }}"
                                 width="{{ site_settings|asset_width:'logo_image' }}"
@@ -85,19 +85,19 @@
                     <nav class="md:hidden" aria-label="Primary navigation">
                         <ul>
                             <li class="relative inline-block">
-                                <a href="{% url 'home' %}" class="relative text-[16px] lg:text-[14px] py-[35px] xl:py-[30px] px-[20px] xl:px-[6px] {% if active_page == 'home' %}text-[#fe3e57]{% else %}text-white{% endif %} block capitalize font-base-font font-medium transition-all hover:text-[#fe3e57]" {% if active_page == 'home' %}aria-current="page"{% endif %}>{{ ui_text.home }}</a>
+                                <a href="{% url 'home' %}" class="relative text-[16px] lg:text-[14px] py-[20px] xl:py-[16px] px-[18px] xl:px-[6px] {% if active_page == 'home' %}text-[#fe3e57]{% else %}text-white{% endif %} block capitalize font-base-font font-medium transition-all hover:text-[#fe3e57]" {% if active_page == 'home' %}aria-current="page"{% endif %}>{{ ui_text.home }}</a>
                             </li>
                             <li class="relative inline-block">
-                                <a href="{% url 'about' %}" class="relative text-[16px] lg:text-[14px] py-[35px] xl:py-[30px] px-[20px] xl:px-[6px] {% if active_page == 'about' %}text-[#fe3e57]{% else %}text-white{% endif %} block capitalize font-base-font font-medium transition-all hover:text-[#fe3e57]" {% if active_page == 'about' %}aria-current="page"{% endif %}>{{ ui_text.about }}</a>
+                                <a href="{% url 'about' %}" class="relative text-[16px] lg:text-[14px] py-[20px] xl:py-[16px] px-[18px] xl:px-[6px] {% if active_page == 'about' %}text-[#fe3e57]{% else %}text-white{% endif %} block capitalize font-base-font font-medium transition-all hover:text-[#fe3e57]" {% if active_page == 'about' %}aria-current="page"{% endif %}>{{ ui_text.about }}</a>
                             </li>
                             <li class="relative inline-block">
-                                <a href="{% url 'portfolio' %}" class="relative text-[16px] lg:text-[14px] py-[35px] xl:py-[30px] px-[20px] xl:px-[6px] {% if active_page == 'portfolio' %}text-[#fe3e57]{% else %}text-white{% endif %} block capitalize font-base-font font-medium transition-all hover:text-[#fe3e57]" {% if active_page == 'portfolio' %}aria-current="page"{% endif %}>{{ ui_text.portfolio }}</a>
+                                <a href="{% url 'portfolio' %}" class="relative text-[16px] lg:text-[14px] py-[20px] xl:py-[16px] px-[18px] xl:px-[6px] {% if active_page == 'portfolio' %}text-[#fe3e57]{% else %}text-white{% endif %} block capitalize font-base-font font-medium transition-all hover:text-[#fe3e57]" {% if active_page == 'portfolio' %}aria-current="page"{% endif %}>{{ ui_text.portfolio }}</a>
                             </li>
                             <li class="relative inline-block">
-                                <a href="{% url 'blog_list' %}" class="relative text-[16px] lg:text-[14px] py-[35px] xl:py-[30px] px-[20px] xl:px-[6px] {% if active_page == 'blog' %}text-[#fe3e57]{% else %}text-white{% endif %} block capitalize font-base-font font-medium transition-all hover:text-[#fe3e57]" {% if active_page == 'blog' %}aria-current="page"{% endif %}>{{ ui_text.blog }}</a>
+                                <a href="{% url 'blog_list' %}" class="relative text-[16px] lg:text-[14px] py-[20px] xl:py-[16px] px-[18px] xl:px-[6px] {% if active_page == 'blog' %}text-[#fe3e57]{% else %}text-white{% endif %} block capitalize font-base-font font-medium transition-all hover:text-[#fe3e57]" {% if active_page == 'blog' %}aria-current="page"{% endif %}>{{ ui_text.blog }}</a>
                             </li>
                             <li class="relative inline-block">
-                                <a href="{% url 'contact' %}" class="relative text-[16px] lg:text-[14px] py-[35px] xl:py-[30px] px-[20px] xl:px-[6px] {% if active_page == 'contact' %}text-[#fe3e57]{% else %}text-white{% endif %} block capitalize font-base-font font-medium transition-all hover:text-[#fe3e57]" {% if active_page == 'contact' %}aria-current="page"{% endif %}>{{ ui_text.contact }}</a>
+                                <a href="{% url 'contact' %}" class="relative text-[16px] lg:text-[14px] py-[20px] xl:py-[16px] px-[18px] xl:px-[6px] {% if active_page == 'contact' %}text-[#fe3e57]{% else %}text-white{% endif %} block capitalize font-base-font font-medium transition-all hover:text-[#fe3e57]" {% if active_page == 'contact' %}aria-current="page"{% endif %}>{{ ui_text.contact }}</a>
                             </li>
                         </ul>
                     </nav>
