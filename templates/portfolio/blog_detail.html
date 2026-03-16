@@ -6,11 +6,11 @@
 {% block content %}
 {% include 'portfolio/partials/page_header.html' with title=post|tr:'title' subtitle=post|tr:'author_name' %}
 
-<section class="bg-[#070640] py-[100px] md:py-[90px] sm:py-[80px]">
+<section class="deferred-section bg-[#070640] py-[100px] md:py-[90px] sm:py-[80px]">
     <div class="wraper">
         <div class="grid grid-cols-12 gap-8 lg:gap-3">
             <div class="col-span-8 md:col-span-12">
-                <img class="w-full rounded-[5px]" src="{{ post|asset_url:'image_path' }}" alt="{{ post.title }}">
+                <img class="site-section-image w-full rounded-[5px]" src="{{ post|asset_url:'image_path' }}" alt="{{ post.title }}" width="{{ post|asset_width:'image_path' }}" height="{{ post|asset_height:'image_path' }}" loading="eager" decoding="async">
                 <div class="mt-[35px]">
                     <span class="text-[#fe3e57] block mb-[12px]">{{ post.published_at|date:"M d, Y" }} {{ ui_text.by|lower }} {{ post|tr:'author_name' }}</span>
                     <h1 class="text-[#fff] text-[48px] md:text-[36px] sm:text-[28px] font-bold mb-[25px]">{{ post|tr:'title' }}</h1>

@@ -6,13 +6,13 @@
 {% block content %}
 {% include 'portfolio/partials/page_header.html' with title=ui_text.portfolio subtitle=ui_text.selected_client_work_and_case_studies %}
 
-<section class="bg-[#070640] py-[100px] md:py-[90px] sm:py-[80px]">
+<section class="deferred-section bg-[#070640] py-[100px] md:py-[90px] sm:py-[80px]">
     <div class="wraper">
         <div class="grid grid-cols-12 gap-8 lg:gap-3">
             {% for project in projects %}
             <div class="col-span-4 md:col-span-6 sm:col-span-12">
                 <div class="bg-[#0c0b44] border border-[#252568] rounded-[5px] overflow-hidden h-full">
-                    <img class="w-full" src="{{ project|asset_url:'image_path' }}" alt="{{ project.title }}">
+                    <img class="site-section-image w-full" src="{{ project|asset_url:'image_path' }}" alt="{{ project.title }}" width="{{ project|asset_width:'image_path' }}" height="{{ project|asset_height:'image_path' }}" loading="lazy" decoding="async">
                     <div class="p-[30px]">
                         <span class="inline-block text-[#fe3e57] mb-[10px]">{{ project|tr:'category' }}</span>
                         <h2 class="text-[#fff] text-[30px] font-bold mb-[15px]">{{ project|tr:'title' }}</h2>

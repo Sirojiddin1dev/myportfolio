@@ -73,6 +73,11 @@ class PortfolioSmokeTests(TestCase):
         self.assertContains(response, '<link rel="canonical" href="http://testserver/">', html=True)
         self.assertContains(response, 'application/ld+json')
         self.assertContains(response, 'og:title')
+        self.assertContains(response, 'assets/js/site.js')
+        self.assertContains(response, 'loading="lazy"')
+        self.assertNotContains(response, 'jquery-plugin-collection.js')
+        self.assertNotContains(response, 'tw-elements.umd.min.js')
+        self.assertNotContains(response, 'jquery.min.js')
 
     def test_uploaded_about_image_overrides_static_fallback(self):
         settings = SiteSettings.objects.first()

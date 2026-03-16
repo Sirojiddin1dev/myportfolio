@@ -1,100 +1,110 @@
 {% extends 'portfolio/base.html' %}
-{% load static translation_tags %}
+{% load translation_tags %}
 
 {% block title %}{{ site_settings|tr:'site_name' }}{% endblock %}
 
+{% block extra_head %}
+<link rel="preload" as="image" href="{{ site_settings|asset_url:'hero_background_image' }}">
+{% endblock %}
+
 {% block content %}
-<section class="relative h-[900px] md:h-[640px] sm:h-[450px] flex justify-center flex-col bg-no-repeat bg-right bg-cover" style="background-image: url('{{ site_settings|asset_url:'hero_background_image' }}');">
-    <div>
-        <div class="wraper">
-            <div class="grid grid-cols-12 gap-8 lg:gap-3">
-                <div class="col-span-8 md:col-span-12 mt-[40px]">
-                    <h2 class="wow fadeInLeftSlow text-[85px] leading-[70px] xl:text-[60px] sm:text-[36px] text-[#fff] font-bold" data-wow-delay="0.5s">
-                        {{ site_settings|tr:'hero_pre_title' }} <span class="text-[#fe3e57]">{{ site_settings|tr:'hero_highlight_name' }}</span> {{ site_settings|tr:'hero_name_suffix' }}
-                    </h2>
-                    <p class="wow fadeInUp text-[30px] sm:text-[22px] text-[#fff] font-semibold mt-[40px] mb-[50px] sm:mt-[20px]" data-wow-delay="0.8s">{{ site_settings|tr:'hero_role' }}</p>
-                    <div class="wow fadeInUp" data-wow-delay="1.0s">
-                        <ul class="flex">
-                            {% for social in social_links|slice:":3" %}
-                            <li>
-                                <a href="{{ social.url|default:'#' }}" class="hero-social{% if forloop.counter == 2 %} s2{% elif forloop.counter == 3 %} s3{% endif %}">
-                                    <i class="{{ social.hero_icon_class|default:social.icon_class }}"></i>
-                                </a>
-                            </li>
-                            {% empty %}
-                            <li class="text-[#fff]">{{ ui_text.add_social_links }}</li>
-                            {% endfor %}
-                        </ul>
+<section class="relative min-h-[860px] md:min-h-[680px] sm:min-h-[560px] overflow-hidden bg-[#070640]">
+    <div class="absolute inset-0">
+        <img
+            class="site-hero-image h-full w-full opacity-[0.22]"
+            src="{{ site_settings|asset_url:'hero_background_image' }}"
+            alt=""
+            width="{{ site_settings|asset_width:'hero_background_image' }}"
+            height="{{ site_settings|asset_height:'hero_background_image' }}"
+            loading="eager"
+            fetchpriority="high"
+            decoding="async"
+        >
+        <div class="site-fade-surface absolute inset-0"></div>
+    </div>
+    <div class="relative wraper pt-[180px] md:pt-[150px] sm:pt-[130px] pb-[90px]">
+        <div class="grid grid-cols-12 gap-8 lg:gap-3 items-end">
+            <div class="col-span-8 md:col-span-12">
+                <h1 class="text-[85px] leading-[0.95] xl:text-[64px] md:text-[52px] sm:text-[38px] sm:leading-[1.05] text-[#fff] font-bold">
+                    {{ site_settings|tr:'hero_pre_title' }} <span class="text-[#fe3e57]">{{ site_settings|tr:'hero_highlight_name' }}</span> {{ site_settings|tr:'hero_name_suffix' }}
+                </h1>
+                <p class="text-[30px] md:text-[24px] sm:text-[20px] text-[#fff] font-semibold mt-[34px] max-w-[720px]">{{ site_settings|tr:'hero_role' }}</p>
+                <div class="mt-[36px] flex flex-wrap items-center gap-[18px]">
+                    <a href="{% url 'contact' %}" class="theme-btn">{{ site_settings|tr:'call_to_action_text' }}</a>
+                    <div class="site-stat-card inline-flex items-center gap-[16px] rounded-[24px] border border-[rgba(255,255,255,0.12)] bg-[rgba(255,255,255,0.06)] px-[22px] py-[16px]">
+                        <strong class="text-[30px] font-bold text-[#fff]">{{ site_settings.experience_years }}+</strong>
+                        <span class="text-[15px] uppercase tracking-[2px] text-[#d8d8e6]">{{ ui_text.years }} {{ ui_text.experience }}</span>
                     </div>
                 </div>
+                <ul class="mt-[42px] flex flex-wrap gap-[14px]">
+                    {% for social in social_links|slice:":3" %}
+                    <li>
+                        {% if social.url %}
+                        <a href="{{ social.url }}" rel="noopener noreferrer" aria-label="{{ social|tr:'name' }}" class="hero-social{% if forloop.counter == 2 %} s2{% elif forloop.counter == 3 %} s3{% endif %}">
+                            <i class="{{ social.hero_icon_class|default:social.icon_class }}" aria-hidden="true"></i>
+                        </a>
+                        {% else %}
+                        <span class="hero-social{% if forloop.counter == 2 %} s2{% elif forloop.counter == 3 %} s3{% endif %}">
+                            <i class="{{ social.hero_icon_class|default:social.icon_class }}" aria-hidden="true"></i>
+                        </span>
+                        {% endif %}
+                    </li>
+                    {% empty %}
+                    <li class="text-[#fff]">{{ ui_text.add_social_links }}</li>
+                    {% endfor %}
+                </ul>
             </div>
-        </div>
-        <div class="wow fadeInRightSlow absolute bottom-0 z-10 right-[250px] lg:right-[10px] md:hidden" data-wow-duration="2000ms">
-            <img src="{{ site_settings|asset_url:'hero_shape_image' }}" alt="Hero shape">
         </div>
     </div>
 </section>
 
-<div class="w-full z-10 h-full relative bg-[#070640] py-[50px] sm:hidden">
-    <div class="wow fadeInUp absolute w-[275px] h-[190px] right-[20%] bottom-0" data-wow-delay="2.0s">
-        <div class="flex items-center justify-center relative bg-[linear-gradient(to_right,rgba(231,24,96,.9),rgba(231,160,50,.9))] before:absolute before:content before:left-[21px] before:top-[15px] before:w-[85%] before:h-[80%] before:border-[1px] before:border-dashed before:border-[#fff]">
-            <h2 class="text-[146px] mt-[10px] text-[#fff] font-bold base-font">{{ site_settings.experience_years }}</h2>
-            <div>
-                <span class="block text-[#fff]">{{ ui_text.years }}</span>
-                <span class="block text-[#fff]">{{ ui_text.experience }}</span>
-            </div>
-        </div>
-    </div>
-</div>
-
-<section class="bg-[#070640] py-[100px] md:py-[90px] sm:py-[80px]">
-    <div class="wraper">
+<section class="deferred-section bg-[#070640] py-[100px] md:py-[90px] sm:py-[80px]">
+    <div class="wraper" data-tabs>
         <h2 class="text-[70px] md:text-[45px] sm:text-[30px] mb-[40px] text-[#fff] font-bold base-font text-left">{{ ui_text.about_me }}</h2>
-        <ul class="border-b-[1px] border-[#211f90] flex list-none flex-row flex-wrap mb-[60px] md:mb-[40px] pl-0" role="tablist" data-te-nav-ref>
-            <li role="presentation">
-                <a href="#tabs-about" class="active block w-[210px] lg:w-[180px] md:w-[120px] h-[55px] md:h-[40px] sm:mb-[15px] leading-[24px] text-center text-[#fff] transition duration-150 ease-linear font-semibold mr-[10px] bg-transparent border-b-[3px] border-b-transparent data-[te-nav-active]:border-b-[#fff] hover:border-b-[#fff] hover:border-b-[2px]" data-te-toggle="pill" data-te-target="#tabs-about" data-te-nav-active role="tab" aria-controls="tabs-about" aria-selected="true">{{ ui_text.about_tab }}</a>
-            </li>
-            <li role="presentation">
-                <a href="#tabs-skill" class="block w-[210px] lg:w-[180px] md:w-[120px] h-[55px] md:h-[40px] sm:mb-[15px] leading-[24px] text-center text-[#fff] transition duration-150 ease-linear font-semibold mr-[10px] bg-transparent border-b-[3px] border-b-transparent data-[te-nav-active]:border-b-[#fff] hover:border-b-[#fff] hover:border-b-[2px]" data-te-toggle="pill" data-te-target="#tabs-skill" role="tab" aria-controls="tabs-skill" aria-selected="false">{{ ui_text.skill }}</a>
-            </li>
-            <li role="presentation">
-                <a href="#tabs-services" class="block w-[210px] lg:w-[180px] md:w-[120px] h-[55px] md:h-[40px] sm:mb-[15px] leading-[24px] text-center text-[#fff] transition duration-150 ease-linear font-semibold mr-[10px] bg-transparent border-b-[3px] border-b-transparent data-[te-nav-active]:border-b-[#fff] hover:border-b-[#fff] hover:border-b-[2px]" data-te-toggle="pill" data-te-target="#tabs-services" role="tab" aria-controls="tabs-services" aria-selected="false">{{ ui_text.services }}</a>
-            </li>
-            <li role="presentation">
-                <a href="#tabs-social" class="block w-[210px] lg:w-[180px] md:w-[120px] h-[55px] md:h-[40px] sm:mb-[15px] leading-[24px] text-center text-[#fff] transition duration-150 ease-linear font-semibold mr-[10px] bg-transparent border-b-[3px] border-b-transparent data-[te-nav-active]:border-b-[#fff] hover:border-b-[#fff] hover:border-b-[2px]" data-te-toggle="pill" data-te-target="#tabs-social" role="tab" aria-controls="tabs-social" aria-selected="false">{{ ui_text.social_media }}</a>
-            </li>
-            <li role="presentation">
-                <a href="#tabs-award" class="block w-[210px] lg:w-[180px] md:w-[120px] h-[55px] md:h-[40px] sm:mb-[15px] leading-[24px] text-center text-[#fff] transition duration-150 ease-linear font-semibold mr-[10px] bg-transparent border-b-[3px] border-b-transparent data-[te-nav-active]:border-b-[#fff] hover:border-b-[#fff] hover:border-b-[2px]" data-te-toggle="pill" data-te-target="#tabs-award" role="tab" aria-controls="tabs-award" aria-selected="false">{{ ui_text.award }}</a>
-            </li>
-        </ul>
+        <div class="mb-[40px] flex flex-wrap gap-[12px] border-b border-[#211f90] pb-[24px]" role="tablist" aria-label="About content sections">
+            <button type="button" class="site-tab-button is-active" data-tab-trigger="about" aria-selected="true" aria-controls="tabs-about">{{ ui_text.about_tab }}</button>
+            <button type="button" class="site-tab-button" data-tab-trigger="skills" aria-selected="false" aria-controls="tabs-skills">{{ ui_text.skill }}</button>
+            <button type="button" class="site-tab-button" data-tab-trigger="services" aria-selected="false" aria-controls="tabs-services">{{ ui_text.services }}</button>
+            <button type="button" class="site-tab-button" data-tab-trigger="social" aria-selected="false" aria-controls="tabs-social">{{ ui_text.social_media }}</button>
+            <button type="button" class="site-tab-button" data-tab-trigger="awards" aria-selected="false" aria-controls="tabs-awards">{{ ui_text.award }}</button>
+        </div>
         <div class="content">
-            <div class="hidden opacity-100 transition-opacity duration-150 ease-linear data-[te-tab-active]:block" id="tabs-about" role="tabpanel" data-te-tab-active>
-                <div class="grid grid-cols-12 gap-8 lg:gap-3">
+            <div class="site-tab-panel" id="tabs-about" data-tab-panel="about">
+                <div class="grid grid-cols-12 gap-8 lg:gap-3 items-center">
                     <div class="col-span-6 md:col-span-12">
                         <div class="w-[120%] md:w-full left-[-101px] md:left-0 relative">
-                            <img class="w-full" src="{{ site_settings|asset_url:'about_image' }}" alt="About image">
+                            <img
+                                class="site-section-image w-full"
+                                src="{{ site_settings|asset_url:'about_image' }}"
+                                alt="{{ site_settings|tr:'about_title' }}"
+                                width="{{ site_settings|asset_width:'about_image' }}"
+                                height="{{ site_settings|asset_height:'about_image' }}"
+                                loading="lazy"
+                                decoding="async"
+                            >
                         </div>
                     </div>
                     <div class="col-span-6 md:col-span-12">
                         <div class="pl-[30px] md:pl-0">
-                            <h2 class="text-[50px] sm:text-[35px] text-[#fff] mb-[50px] md:mb-[30px] font-semibold">{{ site_settings|tr:'about_title' }}</h2>
-                            <p class="text-[#fff] mb-[50px] text-[16px] leading-[30px]">{{ site_settings|tr:'about_description' }}</p>
+                            <h2 class="text-[50px] sm:text-[35px] text-[#fff] mb-[30px] md:mb-[24px] font-semibold">{{ site_settings|tr:'about_title' }}</h2>
+                            <p class="text-[#fff] mb-[36px] text-[16px] leading-[30px]">{{ site_settings|tr:'about_description' }}</p>
                             <a href="{% url 'contact' %}" class="theme-btn">{{ site_settings|tr:'call_to_action_text' }}</a>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="hidden opacity-0 transition-opacity duration-150 ease-linear data-[te-tab-active]:block" id="tabs-skill" role="tabpanel">
+
+            <div class="site-tab-panel" id="tabs-skills" data-tab-panel="skills" hidden>
                 <div class="grid grid-cols-12 gap-8 lg:gap-3">
                     {% for skill in skills %}
-                    <div class="col-span-4 md:col-span-6 sm:col-span-6">
-                        <div class="mb-[70px] md:mb-[40px] sm:mb-[30px] relative">
-                            <div>
-                                <h2 class="text-[100px] lg:text-[75px] lg:leading-[50px] sm:text-[35px] sm:leading-[55px] leading-[80px] font-semibold mt-[8px] pb-[20px]" style="color: {{ skill.accent_color }};">
-                                    <span class="odometer" data-count="{{ skill.percentage }}">00</span>%
-                                </h2>
+                    <div class="col-span-4 md:col-span-6 sm:col-span-12">
+                        <div class="rounded-[5px] border border-[#252568] bg-[rgba(24,23,89,.61)] p-[30px] h-full">
+                            <span class="text-[14px] uppercase tracking-[2px]" style="color: {{ skill.accent_color }};">{{ ui_text.skill }}</span>
+                            <h3 class="text-[#fff] text-[28px] font-bold mt-[10px] mb-[15px]">{{ skill|tr:'name' }}</h3>
+                            <div class="h-[8px] bg-[#252568] rounded-full overflow-hidden">
+                                <div class="h-full rounded-full" style="width: {{ skill.percentage }}%; background: {{ skill.accent_color }};"></div>
                             </div>
-                            <p class="text-[25px] xl:text-[18px] md:text-[13px] sm:text-[12px] text-[#fff] pt-[5px] mt-[30px] sm:mt-[0px] font-semibold">{{ skill|tr:'name' }}</p>
+                            <p class="text-[#c7c6c6] mt-[15px]">{{ skill.percentage }}% {{ ui_text.proficiency }}</p>
                         </div>
                     </div>
                     {% empty %}
@@ -102,14 +112,15 @@
                     {% endfor %}
                 </div>
             </div>
-            <div class="hidden opacity-0 transition-opacity duration-150 ease-linear data-[te-tab-active]:block" id="tabs-services" role="tabpanel">
+
+            <div class="site-tab-panel" id="tabs-services" data-tab-panel="services" hidden>
                 <div class="grid grid-cols-12 gap-8 lg:gap-3">
                     {% for service in services %}
                     <div class="col-span-6 md:col-span-12 sm:col-span-12">
-                        <div class="mb-[60px]">
+                        <div class="mb-[40px] rounded-[5px] border border-[#252568] bg-[rgba(24,23,89,.61)] p-[30px] h-full">
                             <div class="flex items-center justify-centert sm:block">
                                 <div class="mr-8 sm:mr-0 sm:mb-8 w-[200px] h-[184px] text-center leading-[184px] bg-no-repeat bg-center" style="background-image: url('{{ service|asset_url:'background_shape_path' }}');">
-                                    <i class="text-[#181764] text-[60px] ml-[20px] {{ service.icon_class }}"></i>
+                                    <i class="text-[#181764] text-[60px] ml-[20px] {{ service.icon_class }}" aria-hidden="true"></i>
                                 </div>
                                 <div class="max-w-[300px] lg:max-w-[200px] md:max-w-[500px] sm:max-w-full">
                                     <h2 class="text-[#fff] text-[40px] mb-[20px] leading-[55px] font-bold">{{ service|tr:'title' }}</h2>
@@ -123,16 +134,20 @@
                     {% endfor %}
                 </div>
             </div>
-            <div class="hidden opacity-0 transition-opacity duration-150 ease-linear data-[te-tab-active]:block" id="tabs-social" role="tabpanel">
+
+            <div class="site-tab-panel" id="tabs-social" data-tab-panel="social" hidden>
                 <div class="grid grid-cols-12 gap-8 lg:gap-3">
                     {% for social in social_links %}
                     <div class="col-span-4 md:col-span-6 sm:col-span-12">
-                        <div class="flex items-center mb-[60px]">
+                        <div class="flex items-center mb-[40px] rounded-[5px] border border-[#252568] bg-[rgba(24,23,89,.61)] p-[24px]">
                             <div class="w-[130px] h-[120px] sm:w-[100px] sm:h-[90px] border text-center rounded-[10px]" style="border-color: {{ social.accent_color }}; color: {{ social.accent_color }};">
-                                <i class="text-[80px] leading-[120px] sm:text-[50px] sm:leading-[90px] {{ social.icon_class }}"></i>
+                                <i class="text-[80px] leading-[120px] sm:text-[50px] sm:leading-[90px] {{ social.icon_class }}" aria-hidden="true"></i>
                             </div>
                             <div class="ml-[30px]">
                                 <h2 class="text-[30px] sm:text-[25px] text-[#fff] font-bold">{{ social|tr:'name' }}</h2>
+                                {% if social.url %}
+                                <a href="{{ social.url }}" rel="noopener noreferrer" class="mt-[10px] inline-block text-[#fe3e57]">{{ ui_text.view_work }}</a>
+                                {% endif %}
                             </div>
                         </div>
                     </div>
@@ -141,12 +156,21 @@
                     {% endfor %}
                 </div>
             </div>
-            <div class="hidden opacity-0 transition-opacity duration-150 ease-linear data-[te-tab-active]:block" id="tabs-award" role="tabpanel">
+
+            <div class="site-tab-panel" id="tabs-awards" data-tab-panel="awards" hidden>
                 <div class="grid grid-cols-12 gap-8 lg:gap-3">
                     {% for award in awards %}
                     <div class="col-span-6 md:col-span-6 sm:col-span-12">
-                        <div class="mb-[10px]">
-                            <img class="w-full" src="{{ award|asset_url:'image_path' }}" alt="{{ award.title }}">
+                        <div class="mb-[10px] rounded-[5px] overflow-hidden">
+                            <img
+                                class="site-section-image w-full"
+                                src="{{ award|asset_url:'image_path' }}"
+                                alt="{{ award.title }}"
+                                width="{{ award|asset_width:'image_path' }}"
+                                height="{{ award|asset_height:'image_path' }}"
+                                loading="lazy"
+                                decoding="async"
+                            >
                         </div>
                     </div>
                     {% empty %}
@@ -158,16 +182,24 @@
     </div>
 </section>
 
-<section class="bg-[#0c0b48] py-[100px] md:py-[90px] sm:py-[80px]">
+<section class="deferred-section bg-[#0c0b48] py-[100px] md:py-[90px] sm:py-[80px]">
     <div class="wraper">
-        <h2 class="text-[70px] inline-block md:text-[45px] sm:text-[30px] mb-[120px] sm:mb-[40px] text-[#fff] font-bold base-font text-left">{{ ui_text.portfolio }}</h2>
+        <h2 class="text-[70px] inline-block md:text-[45px] sm:text-[30px] mb-[80px] sm:mb-[40px] text-[#fff] font-bold base-font text-left">{{ ui_text.portfolio }}</h2>
         <div>
             <div class="grid grid-cols-12">
                 <div class="col-span-6 md:col-span-6 sm:col-span-12 p-[1px]">
                     {% for project in featured_projects|slice:":2" %}
-                    <div class="relative mb-[1px]">
-                        <img class="w-full" src="{{ project|asset_url:'image_path' }}" alt="{{ project.title }}">
-                        <div class="p-[40px] absolute left-0 bottom-[30px]">
+                    <div class="relative mb-[1px] overflow-hidden">
+                        <img
+                            class="site-section-image w-full"
+                            src="{{ project|asset_url:'image_path' }}"
+                            alt="{{ project.title }}"
+                            width="{{ project|asset_width:'image_path' }}"
+                            height="{{ project|asset_height:'image_path' }}"
+                            loading="lazy"
+                            decoding="async"
+                        >
+                        <div class="p-[30px] absolute inset-x-0 bottom-[20px]">
                             <h2 class="text-[40px] font-bold text-[#fff] sm:text-[30px]">{{ project|tr:'title' }}</h2>
                             <span class="text-[18px] text-[#fff] block mb-[20px] font-light">{{ project|tr:'category' }}</span>
                             <a class="protfolio-btn" href="{% url 'project_detail' project.slug %}">{{ ui_text.view_work }}</a>
@@ -177,9 +209,17 @@
                 </div>
                 <div class="col-span-6 md:col-span-6 sm:col-span-12 p-[1px] mt-[-200px] sm:mt-[0px]">
                     {% for project in featured_projects|slice:"2:4" %}
-                    <div class="relative mb-[1px]">
-                        <img class="w-full" src="{{ project|asset_url:'image_path' }}" alt="{{ project.title }}">
-                        <div class="p-[40px] absolute left-0 bottom-[30px]">
+                    <div class="relative mb-[1px] overflow-hidden">
+                        <img
+                            class="site-section-image w-full"
+                            src="{{ project|asset_url:'image_path' }}"
+                            alt="{{ project.title }}"
+                            width="{{ project|asset_width:'image_path' }}"
+                            height="{{ project|asset_height:'image_path' }}"
+                            loading="lazy"
+                            decoding="async"
+                        >
+                        <div class="p-[30px] absolute inset-x-0 bottom-[20px]">
                             <h2 class="text-[40px] font-bold text-[#fff] sm:text-[30px]">{{ project|tr:'title' }}</h2>
                             <span class="text-[18px] text-[#fff] block mb-[20px] font-light">{{ project|tr:'category' }}</span>
                             <a class="protfolio-btn" href="{% url 'project_detail' project.slug %}">{{ ui_text.view_work }}</a>
@@ -195,27 +235,54 @@
     </div>
 </section>
 
-<section class="section-wrap bg-[url('../images/testimonials/bg.jpg')] bg-no-repeat bg-center">
+<section class="deferred-section bg-[linear-gradient(135deg,rgba(12,11,72,1),rgba(7,6,64,1))] py-[100px] md:py-[90px] sm:py-[80px]">
     <div class="wraper">
-        <h2 class="text-[70px] md:text-[45px] sm:text-[30px] mb-[40px] text-[#fff] font-bold base-font text-left">{{ ui_text.testimonial }}</h2>
-        <div class="relative md:before:hidden before:absolute before:right-[-385px] before:content before:w-[50%] before:top-0 before:h-full before:border-y-[#252568] before:bg-[rgba(24,23,89,.61)] before:border-y-[2px] after:absolute after:right-[-140px] md:after:hidden after:content after:w-[12%] after:h-full after:bg-[#242069] after:border-y-[2px] after:top-0 after:border-y-[#252568]">
-            <div class="testimonial-active owl-carousel">
-                {% for testimonial in testimonials %}
-                <div class="py-[60px] px-[100px] sm:py-[15px] sm:px-[10px] bg-[rgba(24,23,89,.61)] border-y-[2px] border-y-[#252568] relative">
-                    <p class="text-[25px] xl:text-[18px] sm:text-[12px] text-[#fff] leading-[40px] mb-[30px] md:text-[18px]">{{ testimonial|tr:'quote' }}</p>
-                    <div class="mb-[30px]">
-                        <div class="float-left mr-[20px] overflow-hidden border-[5px] border-[#353085]">
-                            <img class="w-[70px] h-[70px]" src="{{ testimonial|asset_url:'image_path' }}" alt="{{ testimonial.name }}">
-                        </div>
-                        <div class="overflow-hidden ml-[20px]">
-                            <h4 class="text-[20px] text-[#fe3e57] font-bold">{{ testimonial|tr:'name' }}</h4>
-                            <span class="text-[16px] text-[#a0a0a0] font-light">{{ testimonial|tr:'role' }}</span>
-                        </div>
-                    </div>
+        <div class="site-slider" data-slider>
+            <div class="flex items-end justify-between gap-[24px] mb-[40px] sm:block">
+                <h2 class="text-[70px] md:text-[45px] sm:text-[30px] text-[#fff] font-bold base-font text-left">{{ ui_text.testimonial }}</h2>
+                {% if testimonials|length > 1 %}
+                <div class="flex items-center gap-[12px] sm:mt-[20px]">
+                    <span class="site-slider-status" data-slider-status>1 / {{ testimonials|length }}</span>
+                    <button type="button" class="site-slider-button" data-slider-prev aria-label="Previous testimonial">
+                        <i class="ti-angle-left" aria-hidden="true"></i>
+                    </button>
+                    <button type="button" class="site-slider-button" data-slider-next aria-label="Next testimonial">
+                        <i class="ti-angle-right" aria-hidden="true"></i>
+                    </button>
                 </div>
-                {% empty %}
-                <div class="py-[60px] px-[100px] bg-[rgba(24,23,89,.61)] border-y-[2px] border-y-[#252568] text-[#fff]">{{ ui_text.add_testimonials }}</div>
-                {% endfor %}
+                {% endif %}
+            </div>
+            <div class="site-slider-viewport">
+                <div class="site-slider-track" data-slider-track>
+                    {% for testimonial in testimonials %}
+                    <article class="site-slider-slide">
+                        <div class="rounded-[8px] border border-[#252568] bg-[rgba(24,23,89,.61)] px-[40px] py-[44px] sm:px-[20px] sm:py-[24px]">
+                            <p class="text-[24px] xl:text-[18px] sm:text-[15px] text-[#fff] leading-[1.7] mb-[30px]">{{ testimonial|tr:'quote' }}</p>
+                            <div class="flex items-center">
+                                <div class="mr-[20px] overflow-hidden rounded-full border-[4px] border-[#353085]">
+                                    <img
+                                        class="h-[70px] w-[70px]"
+                                        src="{{ testimonial|asset_url:'image_path' }}"
+                                        alt="{{ testimonial.name }}"
+                                        width="{{ testimonial|asset_width:'image_path' }}"
+                                        height="{{ testimonial|asset_height:'image_path' }}"
+                                        loading="lazy"
+                                        decoding="async"
+                                    >
+                                </div>
+                                <div>
+                                    <h3 class="text-[20px] text-[#fe3e57] font-bold">{{ testimonial|tr:'name' }}</h3>
+                                    <span class="text-[16px] text-[#a0a0a0] font-light">{{ testimonial|tr:'role' }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+                    {% empty %}
+                    <article class="site-slider-slide">
+                        <div class="rounded-[8px] border border-[#252568] bg-[rgba(24,23,89,.61)] px-[40px] py-[44px] text-[#fff]">{{ ui_text.add_testimonials }}</div>
+                    </article>
+                    {% endfor %}
+                </div>
             </div>
         </div>
     </div>
@@ -223,14 +290,22 @@
 
 {% include 'portfolio/partials/contact_section.html' %}
 
-<section class="bg-[#0c0b48] section-wrap">
+<section class="deferred-section bg-[#0c0b48] section-wrap">
     <div class="wraper">
         <h2 class="text-[70px] md:text-[45px] sm:text-[30px] mb-[60px] text-[#fff] font-bold base-font text-center">{{ ui_text.latest_news }}</h2>
         <div class="grid grid-cols-12 gap-8 lg:gap-3">
             {% for post in latest_posts %}
             <div class="col-span-4 md:col-span-6 sm:col-span-12 md:mb-8">
                 <div class="relative overflow-hidden">
-                    <img class="rounded-[5px] w-full" src="{{ post|asset_url:'image_path' }}" alt="{{ post.title }}">
+                    <img
+                        class="rounded-[5px] w-full"
+                        src="{{ post|asset_url:'image_path' }}"
+                        alt="{{ post.title }}"
+                        width="{{ post|asset_width:'image_path' }}"
+                        height="{{ post|asset_height:'image_path' }}"
+                        loading="lazy"
+                        decoding="async"
+                    >
                 </div>
                 <div class="pt-[30px]">
                     <ul class="flex">

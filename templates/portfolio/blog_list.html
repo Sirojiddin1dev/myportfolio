@@ -6,13 +6,13 @@
 {% block content %}
 {% include 'portfolio/partials/page_header.html' with title=ui_text.blog subtitle=ui_text.latest_notes_ideas_and_updates %}
 
-<section class="bg-[#070640] py-[100px] md:py-[90px] sm:py-[80px]">
+<section class="deferred-section bg-[#070640] py-[100px] md:py-[90px] sm:py-[80px]">
     <div class="wraper">
         <div class="grid grid-cols-12 gap-8 lg:gap-3">
             {% for post in posts %}
             <div class="col-span-4 md:col-span-6 sm:col-span-12">
                 <div class="bg-[#0c0b44] border border-[#252568] rounded-[5px] overflow-hidden h-full">
-                    <img class="w-full" src="{{ post|asset_url:'image_path' }}" alt="{{ post.title }}">
+                    <img class="site-section-image w-full" src="{{ post|asset_url:'image_path' }}" alt="{{ post.title }}" width="{{ post|asset_width:'image_path' }}" height="{{ post|asset_height:'image_path' }}" loading="lazy" decoding="async">
                     <div class="p-[30px]">
                         <span class="text-[#fe3e57] block mb-[10px]">{{ post.published_at|date:"M d, Y" }} {{ ui_text.by|lower }} {{ post|tr:'author_name' }}</span>
                         <h2 class="text-[#fff] text-[28px] font-bold mb-[15px]">{{ post|tr:'title' }}</h2>

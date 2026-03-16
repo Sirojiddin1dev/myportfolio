@@ -6,11 +6,11 @@
 {% block content %}
 {% include 'portfolio/partials/page_header.html' with title=ui_text.about subtitle=ui_text.creative_profile_and_capabilities %}
 
-<section class="bg-[#070640] py-[100px] md:py-[90px] sm:py-[80px]">
+<section class="deferred-section bg-[#070640] py-[100px] md:py-[90px] sm:py-[80px]">
     <div class="wraper">
         <div class="grid grid-cols-12 gap-8 lg:gap-3 items-center">
             <div class="col-span-6 md:col-span-12">
-                <img class="w-full" src="{{ site_settings|asset_url:'about_image' }}" alt="About image">
+                <img class="site-section-image w-full" src="{{ site_settings|asset_url:'about_image' }}" alt="{{ site_settings|tr:'about_title' }}" width="{{ site_settings|asset_width:'about_image' }}" height="{{ site_settings|asset_height:'about_image' }}" loading="eager" decoding="async">
             </div>
             <div class="col-span-6 md:col-span-12">
                 <h2 class="text-[60px] md:text-[40px] sm:text-[30px] text-[#fff] font-bold mb-[30px]">{{ site_settings|tr:'about_title' }}</h2>
@@ -30,7 +30,7 @@
     </div>
 </section>
 
-<section class="bg-[#0c0b48] py-[100px] md:py-[90px] sm:py-[80px]">
+<section class="deferred-section bg-[#0c0b48] py-[100px] md:py-[90px] sm:py-[80px]">
     <div class="wraper">
         <h2 class="text-[70px] md:text-[45px] sm:text-[30px] mb-[60px] text-[#fff] font-bold base-font text-left">{{ ui_text.skills }}</h2>
         <div class="grid grid-cols-12 gap-8 lg:gap-3">
@@ -50,7 +50,7 @@
     </div>
 </section>
 
-<section class="bg-[#070640] py-[100px] md:py-[90px] sm:py-[80px]">
+<section class="deferred-section bg-[#070640] py-[100px] md:py-[90px] sm:py-[80px]">
     <div class="wraper">
         <h2 class="text-[70px] md:text-[45px] sm:text-[30px] mb-[60px] text-[#fff] font-bold base-font text-left">{{ ui_text.services }}</h2>
         <div class="grid grid-cols-12 gap-8 lg:gap-3">
@@ -73,13 +73,13 @@
     </div>
 </section>
 
-<section class="bg-[#0c0b48] py-[100px] md:py-[90px] sm:py-[80px]">
+<section class="deferred-section bg-[#0c0b48] py-[100px] md:py-[90px] sm:py-[80px]">
     <div class="wraper">
         <h2 class="text-[70px] md:text-[45px] sm:text-[30px] mb-[60px] text-[#fff] font-bold base-font text-left">{{ ui_text.awards }}</h2>
         <div class="grid grid-cols-12 gap-8 lg:gap-3">
             {% for award in awards %}
             <div class="col-span-6 md:col-span-6 sm:col-span-12">
-                <img class="w-full rounded-[5px]" src="{{ award|asset_url:'image_path' }}" alt="{{ award.title }}">
+                <img class="site-section-image w-full rounded-[5px]" src="{{ award|asset_url:'image_path' }}" alt="{{ award.title }}" width="{{ award|asset_width:'image_path' }}" height="{{ award|asset_height:'image_path' }}" loading="lazy" decoding="async">
             </div>
             {% endfor %}
         </div>

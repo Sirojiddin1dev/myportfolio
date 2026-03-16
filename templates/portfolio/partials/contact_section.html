@@ -1,5 +1,5 @@
 {% load translation_tags %}
-<section class="pt-[120px] md:pt-[90px] bg-[#070640] pb-[60px]">
+<section class="deferred-section pt-[120px] md:pt-[90px] bg-[#070640] pb-[60px]">
     <div class="wraper">
         <h2 class="text-[70px] md:text-[45px] sm:text-[30px] mb-[60px] text-[#fff] font-bold base-font text-center">{{ site_settings|tr:'call_to_action_text' }}</h2>
         <div class="grid grid-cols-12 gap-8 lg:gap-3">
@@ -13,22 +13,27 @@
                         <div class="mb-[20px] text-[#fe3e57]">{{ contact_form.non_field_errors }}</div>
                         {% endif %}
                         <div class="w-[calc(50%-15px)] float-left sm:w-full sm:float-none mb-[15px]">
+                            <label class="sr-only" for="{{ contact_form.first_name.id_for_label }}">{{ contact_form.first_name.label }}</label>
                             {{ contact_form.first_name }}
                             {% if contact_form.first_name.errors %}<div class="mt-[5px] text-[13px] text-[#fe3e57]">{{ contact_form.first_name.errors|join:', ' }}</div>{% endif %}
                         </div>
                         <div class="w-[calc(50%-15px)] float-left sm:w-full sm:float-none sm:ml-0 ml-[30px] mb-[15px]">
+                            <label class="sr-only" for="{{ contact_form.last_name.id_for_label }}">{{ contact_form.last_name.label }}</label>
                             {{ contact_form.last_name }}
                             {% if contact_form.last_name.errors %}<div class="mt-[5px] text-[13px] text-[#fe3e57]">{{ contact_form.last_name.errors|join:', ' }}</div>{% endif %}
                         </div>
                         <div class="clearfix mb-[15px]">
+                            <label class="sr-only" for="{{ contact_form.email.id_for_label }}">{{ contact_form.email.label }}</label>
                             {{ contact_form.email }}
                             {% if contact_form.email.errors %}<div class="mt-[5px] text-[13px] text-[#fe3e57]">{{ contact_form.email.errors|join:', ' }}</div>{% endif %}
                         </div>
                         <div class="mb-[15px]">
+                            <label class="sr-only" for="{{ contact_form.subject.id_for_label }}">{{ contact_form.subject.label }}</label>
                             {{ contact_form.subject }}
                             {% if contact_form.subject.errors %}<div class="mt-[5px] text-[13px] text-[#fe3e57]">{{ contact_form.subject.errors|join:', ' }}</div>{% endif %}
                         </div>
                         <div class="mb-[15px]">
+                            <label class="sr-only" for="{{ contact_form.message.id_for_label }}">{{ contact_form.message.label }}</label>
                             {{ contact_form.message }}
                             {% if contact_form.message.errors %}<div class="mt-[5px] text-[13px] text-[#fe3e57]">{{ contact_form.message.errors|join:', ' }}</div>{% endif %}
                         </div>
@@ -60,7 +65,7 @@
                                 <i class="text-[40px] text-[#fe3e57] fi flaticon-mail"></i>
                             </div>
                             <div>
-                                <span class="text-[#8c8b8b] text-[18px] font-light">{{ ui_text.official_mail }}</span>
+                                <a href="mailto:{{ site_settings.contact_email }}" class="text-[#8c8b8b] text-[18px] font-light hover:text-[#fff] transition-colors">{{ ui_text.official_mail }}</a>
                             </div>
                         </div>
                     </div>
@@ -73,7 +78,7 @@
                                 <i class="text-[40px] text-[#fe3e57] fi flaticon-phone"></i>
                             </div>
                             <div>
-                                <span class="text-[#8c8b8b] text-[18px] font-light">{{ ui_text.official_phone }}</span>
+                                <a href="tel:{{ site_settings.contact_phone|cut:' ' }}" class="text-[#8c8b8b] text-[18px] font-light hover:text-[#fff] transition-colors">{{ ui_text.official_phone }}</a>
                             </div>
                         </div>
                     </div>

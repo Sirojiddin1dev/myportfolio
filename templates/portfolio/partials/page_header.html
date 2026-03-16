@@ -1,6 +1,18 @@
 {% load translation_tags %}
-<section class="relative min-h-[340px] flex items-center bg-no-repeat bg-cover bg-center" style="background-image: linear-gradient(rgba(7, 6, 64, 0.82), rgba(12, 11, 72, 0.88)), url('{{ site_settings|asset_url:'hero_background_image' }}');">
-    <div class="wraper pt-[80px]">
+<section class="relative min-h-[340px] flex items-center overflow-hidden bg-[#070640]">
+    <div class="absolute inset-0">
+        <img
+            class="site-hero-image h-full w-full opacity-[0.18]"
+            src="{{ site_settings|asset_url:'hero_background_image' }}"
+            alt=""
+            width="{{ site_settings|asset_width:'hero_background_image' }}"
+            height="{{ site_settings|asset_height:'hero_background_image' }}"
+            loading="eager"
+            decoding="async"
+        >
+        <div class="site-fade-surface absolute inset-0"></div>
+    </div>
+    <div class="relative wraper pt-[80px]">
         <div class="max-w-[720px]">
             <span class="inline-block mb-[15px] text-[#fe3e57] tracking-[3px] uppercase text-[14px]">{{ subtitle }}</span>
             <h1 class="text-[70px] md:text-[48px] sm:text-[32px] leading-[1.1] text-[#fff] font-bold">{{ title }}</h1>
