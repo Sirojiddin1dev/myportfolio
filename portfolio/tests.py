@@ -70,6 +70,8 @@ class PortfolioSmokeTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'Creative Developer')
         self.assertContains(response, 'assets/images/site-logo.png')
+        self.assertContains(response, 'assets/images/site-favicon.png')
+        self.assertContains(response, 'assets/images/favicon.ico')
         self.assertContains(response, '<link rel="canonical" href="http://testserver/">', html=True)
         self.assertContains(response, 'application/ld+json')
         self.assertContains(response, 'og:title')
@@ -102,6 +104,7 @@ class PortfolioSmokeTests(TestCase):
     def test_default_logo_path_is_updated(self):
         self.assertEqual(SiteSettings.objects.first().logo_image, 'assets/images/site-logo.png')
         self.assertEqual(SiteSettings.objects.first().footer_logo_image, 'assets/images/site-logo.png')
+        self.assertEqual(SiteSettings.objects.first().favicon_image, 'assets/images/site-favicon.png')
 
     def test_contact_form_creates_message(self):
         with patch('portfolio.views.send_contact_message_notification') as notify_mock:

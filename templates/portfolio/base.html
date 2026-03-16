@@ -10,7 +10,9 @@
     <meta name="author" content="{% firstof seo.author site_settings|tr:'site_name' %}">
     <meta name="theme-color" content="#070640">
     <link rel="canonical" href="{{ seo.canonical_url|default:current_absolute_url }}">
-    <link rel="shortcut icon" type="image/png" href="{{ site_settings|asset_url:'favicon_image' }}">
+    <link rel="icon" type="image/png" sizes="64x64" href="{{ site_settings|asset_url:'favicon_image' }}">
+    <link rel="shortcut icon" href="{% static 'assets/images/favicon.ico' %}">
+    <link rel="apple-touch-icon" href="{{ site_settings|asset_url:'favicon_image' }}">
     <meta property="og:site_name" content="{% firstof seo.site_name site_settings|tr:'site_name' %}">
     <meta property="og:title" content="{% firstof seo.title site_settings|tr:'site_name' %}">
     <meta property="og:description" content="{% firstof seo.description site_settings|tr:'meta_description' %}">

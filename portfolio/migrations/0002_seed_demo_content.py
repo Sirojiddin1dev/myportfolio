@@ -36,7 +36,7 @@ def seed_demo_content(apps, schema_editor):
             copyright_text='2026 Follio. All rights reserved.',
             logo_image='assets/images/site-logo.png',
             footer_logo_image='assets/images/site-logo.png',
-            favicon_image='assets/images/favicon.png',
+            favicon_image='assets/images/site-favicon.png',
             hero_background_image='assets/images/slider/slide-1.jpg',
             hero_shape_image='assets/images/slider/hero-shape.png',
             about_image='assets/images/about/about.png',

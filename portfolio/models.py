@@ -171,7 +171,7 @@ class SiteSettings(UploadedImageOptimizationMixin, AssetFallbackMixin, TimeStamp
         blank=True,
         help_text='Optional uploaded image. If empty, the static path above is used.',
     )
-    favicon_image = models.CharField(max_length=255, default='assets/images/favicon.png')
+    favicon_image = models.CharField(max_length=255, default='assets/images/site-favicon.png')
     favicon_image_file = models.FileField(
         upload_to='site/',
         blank=True,

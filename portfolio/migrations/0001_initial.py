@@ -122,7 +122,7 @@ class Migration(migrations.Migration):
                 ('copyright_text', models.CharField(default='2026 Follio. All rights reserved.', max_length=120)),
                 ('logo_image', models.CharField(default='assets/images/site-logo.png', max_length=255)),
                 ('footer_logo_image', models.CharField(default='assets/images/site-logo.png', max_length=255)),
-                ('favicon_image', models.CharField(default='assets/images/favicon.png', max_length=255)),
+                ('favicon_image', models.CharField(default='assets/images/site-favicon.png', max_length=255)),
                 ('hero_background_image', models.CharField(default='assets/images/slider/slide-1.jpg', help_text='Static asset path inside the bundled template.', max_length=255)),
                 ('hero_shape_image', models.CharField(default='assets/images/slider/hero-shape.png', help_text='Static asset path inside the bundled template.', max_length=255)),
                 ('about_image', models.CharField(default='assets/images/about/about.png', help_text='Static asset path inside the bundled template.', max_length=255)),
