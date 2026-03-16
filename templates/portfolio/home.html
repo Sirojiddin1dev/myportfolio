@@ -8,83 +8,98 @@
 {% endblock %}
 
 {% block content %}
-<section class="relative overflow-hidden bg-[#070640]">
-    <div class="absolute inset-0">
-        <img
-            class="site-hero-image h-full w-full opacity-[0.16]"
-            src="{{ site_settings|asset_url:'hero_background_image' }}"
-            alt=""
-            width="{{ site_settings|asset_width:'hero_background_image' }}"
-            height="{{ site_settings|asset_height:'hero_background_image' }}"
-            loading="eager"
-            fetchpriority="high"
-            decoding="async"
-        >
-        <div class="site-fade-surface absolute inset-0"></div>
-    </div>
+<section
+    class="home-hero deferred-section"
+    style="--hero-bg: url('{{ site_settings|asset_url:'hero_background_image' }}');"
+>
+    <div class="home-hero-overlay"></div>
+    <div class="wraper home-hero-inner">
+        <div class="home-hero-main">
+            {% if site_settings|tr:'hero_pre_title' %}
+            <span class="home-eyebrow">{{ site_settings|tr:'hero_pre_title' }}</span>
+            {% endif %}
 
-    <div class="relative wraper pt-[220px] xl:pt-[200px] lg:pt-[180px] md:pt-[160px] sm:pt-[140px] pb-[110px] md:pb-[90px] sm:pb-[70px]">
-        <div class="grid grid-cols-12 gap-8 lg:gap-5 items-center">
-            <div class="col-span-7 xl:col-span-8 md:col-span-12">
-                {% if site_settings|tr:'hero_pre_title' %}
-                <span class="inline-flex rounded-full border border-[rgba(255,255,255,0.14)] bg-[rgba(255,255,255,0.06)] px-[16px] py-[8px] text-[12px] font-semibold uppercase tracking-[0.24em] text-[#d8d8e6]">
-                    {{ site_settings|tr:'hero_pre_title' }}
-                </span>
-                {% endif %}
+            <h1 class="home-title">
+                <span class="home-title-line">I'm {{ site_settings|tr:'hero_highlight_name' }}</span>
+                <span class="home-title-line home-title-accent">{{ site_settings|tr:'hero_name_suffix' }}</span>
+            </h1>
 
-                <h1 class="mt-[24px] max-w-[760px] text-[78px] leading-[0.92] tracking-[-0.04em] text-[#fff] font-bold xl:text-[64px] lg:text-[54px] md:text-[46px] sm:mt-[18px] sm:text-[38px] sm:leading-[1.02]">
-                    <span class="block text-[#fff]">{{ site_settings|tr:'hero_highlight_name' }}</span>
-                    <span class="mt-[6px] block text-[#fe3e57]">{{ site_settings|tr:'hero_name_suffix' }}</span>
-                </h1>
+            <p class="home-role">{{ site_settings|tr:'hero_role' }}</p>
 
-                <p class="mt-[26px] max-w-[640px] text-[28px] font-semibold text-[#fff] md:text-[22px] sm:text-[18px]">
-                    {{ site_settings|tr:'hero_role' }}
-                </p>
+            <div class="home-actions">
+                <a href="{% url 'contact' %}" class="theme-btn">{{ site_settings|tr:'call_to_action_text' }}</a>
+                <a href="{% url 'portfolio' %}" class="home-secondary-btn">{{ ui_text.view_work }}</a>
+            </div>
 
-                <div class="mt-[34px] flex flex-wrap items-center gap-[16px] sm:flex-col sm:items-start">
-                    <a href="{% url 'contact' %}" class="theme-btn">{{ site_settings|tr:'call_to_action_text' }}</a>
-                    <a href="{% url 'portfolio' %}" class="inline-flex items-center rounded-full border border-[rgba(255,255,255,0.16)] px-[24px] py-[14px] text-[15px] font-semibold text-[#fff] transition-all hover:border-[#fe3e57] hover:text-[#fe3e57]">
-                        {{ ui_text.view_work }}
+            <ul class="home-social-list">
+                {% for social in social_links|slice:":3" %}
+                <li>
+                    {% if social.url %}
+                    <a href="{{ social.url }}" rel="noopener noreferrer" aria-label="{{ social|tr:'name' }}" class="hero-social{% if forloop.counter == 2 %} s2{% elif forloop.counter == 3 %} s3{% endif %}">
+                        <i class="{{ social.hero_icon_class|default:social.icon_class }}" aria-hidden="true"></i>
                     </a>
-                </div>
+                    {% else %}
+                    <span class="hero-social{% if forloop.counter == 2 %} s2{% elif forloop.counter == 3 %} s3{% endif %}">
+                        <i class="{{ social.hero_icon_class|default:social.icon_class }}" aria-hidden="true"></i>
+                    </span>
+                    {% endif %}
+                </li>
+                {% empty %}
+                <li class="home-empty-note">{{ ui_text.add_social_links }}</li>
+                {% endfor %}
+            </ul>
+        </div>
 
-                <ul class="mt-[34px] flex flex-wrap gap-[14px]">
-                    {% for social in social_links|slice:":3" %}
-                    <li>
-                        {% if social.url %}
-                        <a href="{{ social.url }}" rel="noopener noreferrer" aria-label="{{ social|tr:'name' }}" class="hero-social{% if forloop.counter == 2 %} s2{% elif forloop.counter == 3 %} s3{% endif %}">
-                            <i class="{{ social.hero_icon_class|default:social.icon_class }}" aria-hidden="true"></i>
-                        </a>
-                        {% else %}
-                        <span class="hero-social{% if forloop.counter == 2 %} s2{% elif forloop.counter == 3 %} s3{% endif %}">
-                            <i class="{{ social.hero_icon_class|default:social.icon_class }}" aria-hidden="true"></i>
-                        </span>
-                        {% endif %}
-                    </li>
-                    {% empty %}
-                    <li class="text-[#fff]">{{ ui_text.add_social_links }}</li>
-                    {% endfor %}
-                </ul>
+        <aside class="home-hero-card">
+            <div class="home-hero-card-item">
+                <span class="home-card-label">{{ ui_text.experience_label }}</span>
+                <strong class="home-card-value">{{ site_settings.experience_years }}+</strong>
+                <span class="home-card-note">{{ ui_text.years }} {{ ui_text.experience }}</span>
             </div>
+            <div class="home-hero-card-item">
+                <span class="home-card-label">{{ ui_text.contact_label }}</span>
+                <p class="home-card-text">{{ site_settings.contact_email }}</p>
+            </div>
+            <div class="home-hero-card-item">
+                <span class="home-card-label">{{ ui_text.office_address }}</span>
+                <p class="home-card-text">{{ site_settings|tr:'office_address' }}</p>
+            </div>
+        </aside>
+    </div>
+</section>
 
-            <div class="col-span-5 xl:col-span-4 md:col-span-12">
-                <div class="rounded-[28px] border border-[rgba(255,255,255,0.12)] bg-[rgba(13,12,76,0.72)] p-[34px] shadow-[0_30px_90px_rgba(4,4,32,0.35)] backdrop-blur-[10px] sm:p-[24px]">
-                    <div class="border-b border-[rgba(255,255,255,0.1)] pb-[22px]">
-                        <span class="text-[13px] uppercase tracking-[0.22em] text-[#a8abd8]">{{ ui_text.experience_label }}</span>
-                        <div class="mt-[10px] flex items-end justify-between gap-[14px]">
-                            <strong class="text-[64px] leading-none font-bold text-[#fff] sm:text-[48px]">{{ site_settings.experience_years }}+</strong>
-                            <span class="pb-[8px] text-right text-[14px] uppercase tracking-[0.2em] text-[#dfe1ff]">{{ ui_text.years }} {{ ui_text.experience }}</span>
-                        </div>
+<section class="home-section home-section-alt deferred-section">
+    <div class="wraper">
+        <div class="home-two-col">
+            <div class="home-media">
+                <img
+                    class="site-section-image home-media-image"
+                    src="{{ site_settings|asset_url:'about_image' }}"
+                    alt="{{ site_settings|tr:'about_title' }}"
+                    width="{{ site_settings|asset_width:'about_image' }}"
+                    height="{{ site_settings|asset_height:'about_image' }}"
+                    loading="lazy"
+                    decoding="async"
+                >
+            </div>
+            <div class="home-copy">
+                <span class="home-kicker">{{ ui_text.about_me }}</span>
+                <h2 class="home-heading">{{ site_settings|tr:'about_title' }}</h2>
+                <p class="home-copy-text">{{ site_settings|tr:'about_description' }}</p>
+                <a href="{% url 'about' %}" class="theme-btn">{{ ui_text.about }}</a>
+
+                <div class="home-mini-stats">
+                    <div class="home-mini-stat">
+                        <span>{{ ui_text.skills }}</span>
+                        <strong>{{ skills|length }}</strong>
                     </div>
-
-                    <div class="py-[22px] border-b border-[rgba(255,255,255,0.1)]">
-                        <span class="text-[13px] uppercase tracking-[0.22em] text-[#a8abd8]">{{ ui_text.contact_label }}</span>
-                        <p class="mt-[10px] text-[22px] font-semibold text-[#fff] break-words">{{ site_settings.contact_email }}</p>
+                    <div class="home-mini-stat">
+                        <span>{{ ui_text.services }}</span>
+                        <strong>{{ services|length }}</strong>
                     </div>
-
-                    <div class="pt-[22px]">
-                        <span class="text-[13px] uppercase tracking-[0.22em] text-[#a8abd8]">{{ ui_text.office_address }}</span>
-                        <p class="mt-[10px] text-[18px] leading-[1.7] text-[#fff]">{{ site_settings|tr:'office_address' }}</p>
+                    <div class="home-mini-stat">
+                        <span>{{ ui_text.awards }}</span>
+                        <strong>{{ awards|length }}</strong>
                     </div>
                 </div>
             </div>
@@ -92,197 +107,143 @@
     </div>
 </section>
 
-<section class="deferred-section bg-[#0c0b48] py-[110px] md:py-[90px] sm:py-[70px]">
+<section class="home-section deferred-section">
     <div class="wraper">
-        <div class="grid grid-cols-12 gap-8 lg:gap-5 items-center">
-            <div class="col-span-6 md:col-span-12">
-                <div class="overflow-hidden rounded-[28px] border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.03)]">
-                    <img
-                        class="site-section-image w-full"
-                        src="{{ site_settings|asset_url:'about_image' }}"
-                        alt="{{ site_settings|tr:'about_title' }}"
-                        width="{{ site_settings|asset_width:'about_image' }}"
-                        height="{{ site_settings|asset_height:'about_image' }}"
-                        loading="lazy"
-                        decoding="async"
-                    >
-                </div>
-            </div>
-
-            <div class="col-span-6 md:col-span-12">
-                <span class="text-[13px] uppercase tracking-[0.22em] text-[#fe3e57]">{{ ui_text.about_me }}</span>
-                <h2 class="mt-[14px] max-w-[620px] text-[58px] leading-[1] font-bold text-[#fff] md:text-[42px] sm:text-[32px]">{{ site_settings|tr:'about_title' }}</h2>
-                <p class="mt-[24px] text-[17px] leading-[1.9] text-[#c7c6c6]">{{ site_settings|tr:'about_description' }}</p>
-
-                <div class="mt-[30px] grid grid-cols-2 gap-[18px] sm:grid-cols-1">
-                    <div class="rounded-[22px] border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.03)] p-[24px]">
-                        <span class="text-[13px] uppercase tracking-[0.22em] text-[#a8abd8]">{{ ui_text.skills }}</span>
-                        <p class="mt-[12px] text-[34px] font-bold text-[#fff]">{{ skills|length }}</p>
-                    </div>
-                    <div class="rounded-[22px] border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.03)] p-[24px]">
-                        <span class="text-[13px] uppercase tracking-[0.22em] text-[#a8abd8]">{{ ui_text.services }}</span>
-                        <p class="mt-[12px] text-[34px] font-bold text-[#fff]">{{ services|length }}</p>
-                    </div>
-                </div>
-            </div>
+        <div class="home-section-head">
+            <span class="home-kicker">{{ ui_text.skills }}</span>
+            <h2 class="home-heading">{{ ui_text.skills }}</h2>
         </div>
-    </div>
-</section>
-
-<section class="deferred-section bg-[#070640] py-[110px] md:py-[90px] sm:py-[70px]">
-    <div class="wraper">
-        <div class="flex items-end justify-between gap-[20px] sm:block">
-            <div>
-                <span class="text-[13px] uppercase tracking-[0.22em] text-[#fe3e57]">{{ ui_text.skills }}</span>
-                <h2 class="mt-[14px] text-[58px] leading-[1] font-bold text-[#fff] md:text-[42px] sm:text-[32px]">{{ ui_text.skills }}</h2>
-            </div>
-        </div>
-
-        <div class="mt-[40px] grid grid-cols-12 gap-6">
+        <div class="home-grid home-grid-3">
             {% for skill in skills %}
-            <div class="col-span-4 md:col-span-6 sm:col-span-12">
-                <div class="h-full rounded-[24px] border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.03)] p-[28px]">
-                    <div class="flex items-start justify-between gap-[18px]">
-                        <h3 class="text-[28px] font-bold text-[#fff]">{{ skill|tr:'name' }}</h3>
-                        <span class="text-[22px] font-bold" style="color: {{ skill.accent_color }};">{{ skill.percentage }}%</span>
-                    </div>
-                    <div class="mt-[18px] h-[9px] overflow-hidden rounded-full bg-[rgba(255,255,255,0.08)]">
-                        <div class="h-full rounded-full" style="width: {{ skill.percentage }}%; background: {{ skill.accent_color }};"></div>
-                    </div>
+            <article class="home-card">
+                <div class="home-card-top">
+                    <h3>{{ skill|tr:'name' }}</h3>
+                    <span style="color: {{ skill.accent_color }};">{{ skill.percentage }}%</span>
                 </div>
-            </div>
+                <div class="home-progress">
+                    <span style="width: {{ skill.percentage }}%; background: {{ skill.accent_color }};"></span>
+                </div>
+            </article>
             {% empty %}
-            <div class="col-span-12 text-[#fff]">{{ ui_text.add_skills }}</div>
+            <div class="home-empty-note">{{ ui_text.add_skills }}</div>
             {% endfor %}
         </div>
     </div>
 </section>
 
-<section class="deferred-section bg-[#0c0b48] py-[110px] md:py-[90px] sm:py-[70px]">
+<section class="home-section home-section-alt deferred-section">
     <div class="wraper">
-        <span class="text-[13px] uppercase tracking-[0.22em] text-[#fe3e57]">{{ ui_text.services }}</span>
-        <h2 class="mt-[14px] text-[58px] leading-[1] font-bold text-[#fff] md:text-[42px] sm:text-[32px]">{{ ui_text.services }}</h2>
-
-        <div class="mt-[40px] grid grid-cols-12 gap-6">
+        <div class="home-section-head">
+            <span class="home-kicker">{{ ui_text.services }}</span>
+            <h2 class="home-heading">{{ ui_text.services }}</h2>
+        </div>
+        <div class="home-grid home-grid-2">
             {% for service in services %}
-            <div class="col-span-6 md:col-span-12">
-                <div class="h-full rounded-[24px] border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.03)] p-[28px]">
-                    <div class="flex items-start gap-[22px] sm:block">
-                        <div class="flex h-[92px] w-[92px] shrink-0 items-center justify-center rounded-[22px] bg-[rgba(255,255,255,0.92)] sm:mb-[18px]">
-                            <i class="text-[38px] text-[#181764] {{ service.icon_class }}" aria-hidden="true"></i>
-                        </div>
-                        <div>
-                            <h3 class="text-[32px] font-bold text-[#fff] sm:text-[26px]">{{ service|tr:'title' }}</h3>
-                            <p class="mt-[16px] text-[16px] leading-[1.85] text-[#c7c6c6]">{{ service|tr:'description' }}</p>
-                        </div>
-                    </div>
+            <article class="home-card home-service-card">
+                <div class="home-service-icon">
+                    <i class="{{ service.icon_class }}" aria-hidden="true"></i>
                 </div>
-            </div>
+                <div>
+                    <h3>{{ service|tr:'title' }}</h3>
+                    <p>{{ service|tr:'description' }}</p>
+                </div>
+            </article>
             {% empty %}
-            <div class="col-span-12 text-[#fff]">{{ ui_text.add_services }}</div>
+            <div class="home-empty-note">{{ ui_text.add_services }}</div>
             {% endfor %}
         </div>
     </div>
 </section>
 
-<section class="deferred-section bg-[#070640] py-[110px] md:py-[90px] sm:py-[70px]">
+<section class="home-section deferred-section">
     <div class="wraper">
-        <div class="flex items-end justify-between gap-[20px] sm:block">
+        <div class="home-section-head home-section-head-with-action">
             <div>
-                <span class="text-[13px] uppercase tracking-[0.22em] text-[#fe3e57]">{{ ui_text.portfolio }}</span>
-                <h2 class="mt-[14px] text-[58px] leading-[1] font-bold text-[#fff] md:text-[42px] sm:text-[32px]">{{ ui_text.portfolio }}</h2>
+                <span class="home-kicker">{{ ui_text.portfolio }}</span>
+                <h2 class="home-heading">{{ ui_text.portfolio }}</h2>
             </div>
-            <a class="inline-flex items-center rounded-full border border-[rgba(255,255,255,0.16)] px-[22px] py-[12px] text-[15px] font-semibold text-[#fff] transition-all hover:border-[#fe3e57] hover:text-[#fe3e57] sm:mt-[20px]" href="{% url 'portfolio' %}">
-                {{ ui_text.see_more_work }}
-            </a>
+            <a href="{% url 'portfolio' %}" class="home-secondary-btn">{{ ui_text.see_more_work }}</a>
         </div>
-
-        <div class="mt-[40px] grid grid-cols-12 gap-6">
+        <div class="home-grid home-grid-2">
             {% for project in featured_projects %}
-            <div class="col-span-6 md:col-span-12">
-                <article class="overflow-hidden rounded-[26px] border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.03)]">
-                    <img
-                        class="site-section-image w-full"
-                        src="{{ project|asset_url:'image_path' }}"
-                        alt="{{ project.title }}"
-                        width="{{ project|asset_width:'image_path' }}"
-                        height="{{ project|asset_height:'image_path' }}"
-                        loading="lazy"
-                        decoding="async"
-                    >
-                    <div class="p-[28px]">
-                        <span class="text-[13px] uppercase tracking-[0.2em] text-[#fe3e57]">{{ project|tr:'category' }}</span>
-                        <h3 class="mt-[12px] text-[34px] font-bold text-[#fff] sm:text-[28px]">{{ project|tr:'title' }}</h3>
-                        <p class="mt-[14px] text-[16px] leading-[1.8] text-[#c7c6c6]">{{ project|tr:'short_description' }}</p>
-                        <a class="mt-[20px] inline-flex items-center text-[15px] font-semibold text-[#fff] transition-colors hover:text-[#fe3e57]" href="{% url 'project_detail' project.slug %}">
-                            {{ ui_text.view_project }}
-                        </a>
-                    </div>
-                </article>
-            </div>
+            <article class="home-card home-media-card">
+                <img
+                    class="site-section-image home-card-image"
+                    src="{{ project|asset_url:'image_path' }}"
+                    alt="{{ project|tr:'title' }}"
+                    width="{{ project|asset_width:'image_path' }}"
+                    height="{{ project|asset_height:'image_path' }}"
+                    loading="lazy"
+                    decoding="async"
+                >
+                <div class="home-card-body">
+                    <span class="home-card-kicker">{{ project|tr:'category' }}</span>
+                    <h3>{{ project|tr:'title' }}</h3>
+                    <p>{{ project|tr:'short_description' }}</p>
+                    <a class="home-card-link" href="{% url 'project_detail' project.slug %}">{{ ui_text.view_project }}</a>
+                </div>
+            </article>
             {% empty %}
-            <div class="col-span-12 text-[#fff]">{{ ui_text.no_projects }}</div>
+            <div class="home-empty-note">{{ ui_text.no_projects }}</div>
             {% endfor %}
         </div>
     </div>
 </section>
 
 {% if awards %}
-<section class="deferred-section bg-[#0c0b48] py-[110px] md:py-[90px] sm:py-[70px]">
+<section class="home-section home-section-alt deferred-section">
     <div class="wraper">
-        <span class="text-[13px] uppercase tracking-[0.22em] text-[#fe3e57]">{{ ui_text.awards }}</span>
-        <h2 class="mt-[14px] text-[58px] leading-[1] font-bold text-[#fff] md:text-[42px] sm:text-[32px]">{{ ui_text.awards }}</h2>
-
-        <div class="mt-[40px] grid grid-cols-12 gap-6">
+        <div class="home-section-head">
+            <span class="home-kicker">{{ ui_text.awards }}</span>
+            <h2 class="home-heading">{{ ui_text.awards }}</h2>
+        </div>
+        <div class="home-grid home-grid-2">
             {% for award in awards %}
-            <div class="col-span-6 md:col-span-12">
-                <div class="overflow-hidden rounded-[24px] border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.03)]">
-                    <img
-                        class="site-section-image w-full"
-                        src="{{ award|asset_url:'image_path' }}"
-                        alt="{{ award.title }}"
-                        width="{{ award|asset_width:'image_path' }}"
-                        height="{{ award|asset_height:'image_path' }}"
-                        loading="lazy"
-                        decoding="async"
-                    >
-                </div>
-            </div>
+            <article class="home-card home-media-card">
+                <img
+                    class="site-section-image home-card-image"
+                    src="{{ award|asset_url:'image_path' }}"
+                    alt="{{ award|tr:'title' }}"
+                    width="{{ award|asset_width:'image_path' }}"
+                    height="{{ award|asset_height:'image_path' }}"
+                    loading="lazy"
+                    decoding="async"
+                >
+            </article>
             {% endfor %}
         </div>
     </div>
 </section>
 {% endif %}
 
-<section class="deferred-section bg-[#070640] py-[110px] md:py-[90px] sm:py-[70px]">
+<section class="home-section deferred-section">
     <div class="wraper">
-        <span class="text-[13px] uppercase tracking-[0.22em] text-[#fe3e57]">{{ ui_text.testimonial }}</span>
-        <h2 class="mt-[14px] text-[58px] leading-[1] font-bold text-[#fff] md:text-[42px] sm:text-[32px]">{{ ui_text.testimonial }}</h2>
-
-        <div class="mt-[40px] grid grid-cols-12 gap-6">
+        <div class="home-section-head">
+            <span class="home-kicker">{{ ui_text.testimonial }}</span>
+            <h2 class="home-heading">{{ ui_text.testimonial }}</h2>
+        </div>
+        <div class="home-grid home-grid-3">
             {% for testimonial in testimonials|slice:":3" %}
-            <div class="col-span-4 md:col-span-6 sm:col-span-12">
-                <article class="h-full rounded-[24px] border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.03)] p-[28px]">
-                    <p class="text-[18px] leading-[1.9] text-[#fff]">"{{ testimonial|tr:'quote' }}"</p>
-                    <div class="mt-[24px] flex items-center gap-[16px]">
-                        <img
-                            class="h-[64px] w-[64px] rounded-full border border-[rgba(255,255,255,0.14)]"
-                            src="{{ testimonial|asset_url:'image_path' }}"
-                            alt="{{ testimonial.name }}"
-                            width="{{ testimonial|asset_width:'image_path' }}"
-                            height="{{ testimonial|asset_height:'image_path' }}"
-                            loading="lazy"
-                            decoding="async"
-                        >
-                        <div>
-                            <h3 class="text-[20px] font-bold text-[#fe3e57]">{{ testimonial|tr:'name' }}</h3>
-                            <p class="text-[15px] text-[#bfc3ff]">{{ testimonial|tr:'role' }}</p>
-                        </div>
+            <article class="home-card">
+                <p class="home-quote">"{{ testimonial|tr:'quote' }}"</p>
+                <div class="home-author">
+                    <img
+                        class="home-author-image"
+                        src="{{ testimonial|asset_url:'image_path' }}"
+                        alt="{{ testimonial|tr:'name' }}"
+                        width="{{ testimonial|asset_width:'image_path' }}"
+                        height="{{ testimonial|asset_height:'image_path' }}"
+                        loading="lazy"
+                        decoding="async"
+                    >
+                    <div>
+                        <h3>{{ testimonial|tr:'name' }}</h3>
+                        <p>{{ testimonial|tr:'role' }}</p>
                     </div>
-                </article>
-            </div>
+                </div>
+            </article>
             {% empty %}
-            <div class="col-span-12 text-[#fff]">{{ ui_text.add_testimonials }}</div>
+            <div class="home-empty-note">{{ ui_text.add_testimonials }}</div>
             {% endfor %}
         </div>
     </div>
@@ -290,36 +251,33 @@
 
 {% include 'portfolio/partials/contact_section.html' %}
 
-<section class="deferred-section bg-[#0c0b48] py-[110px] md:py-[90px] sm:py-[70px]">
+<section class="home-section home-section-alt deferred-section">
     <div class="wraper">
-        <span class="text-[13px] uppercase tracking-[0.22em] text-[#fe3e57]">{{ ui_text.latest_news }}</span>
-        <h2 class="mt-[14px] text-[58px] leading-[1] font-bold text-[#fff] md:text-[42px] sm:text-[32px]">{{ ui_text.latest_news }}</h2>
-
-        <div class="mt-[40px] grid grid-cols-12 gap-6">
+        <div class="home-section-head">
+            <span class="home-kicker">{{ ui_text.latest_news }}</span>
+            <h2 class="home-heading">{{ ui_text.latest_news }}</h2>
+        </div>
+        <div class="home-grid home-grid-3">
             {% for post in latest_posts %}
-            <div class="col-span-4 md:col-span-6 sm:col-span-12">
-                <article class="h-full overflow-hidden rounded-[24px] border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.03)]">
-                    <img
-                        class="site-section-image w-full"
-                        src="{{ post|asset_url:'image_path' }}"
-                        alt="{{ post.title }}"
-                        width="{{ post|asset_width:'image_path' }}"
-                        height="{{ post|asset_height:'image_path' }}"
-                        loading="lazy"
-                        decoding="async"
-                    >
-                    <div class="p-[28px]">
-                        <span class="text-[13px] uppercase tracking-[0.2em] text-[#fe3e57]">{{ ui_text.by }} {{ post|tr:'author_name' }}</span>
-                        <h3 class="mt-[14px] text-[30px] font-bold text-[#fff] sm:text-[24px]">{{ post|tr:'title' }}</h3>
-                        <p class="mt-[14px] text-[16px] leading-[1.8] text-[#c7c6c6]">{{ post|tr:'summary' }}</p>
-                        <a href="{% url 'blog_detail' post.slug %}" class="mt-[20px] inline-flex items-center text-[15px] font-semibold text-[#fff] transition-colors hover:text-[#fe3e57]">
-                            {{ ui_text.read_article }}
-                        </a>
-                    </div>
-                </article>
-            </div>
+            <article class="home-card home-media-card">
+                <img
+                    class="site-section-image home-card-image"
+                    src="{{ post|asset_url:'image_path' }}"
+                    alt="{{ post|tr:'title' }}"
+                    width="{{ post|asset_width:'image_path' }}"
+                    height="{{ post|asset_height:'image_path' }}"
+                    loading="lazy"
+                    decoding="async"
+                >
+                <div class="home-card-body">
+                    <span class="home-card-kicker">{{ ui_text.by }} {{ post|tr:'author_name' }}</span>
+                    <h3>{{ post|tr:'title' }}</h3>
+                    <p>{{ post|tr:'summary' }}</p>
+                    <a href="{% url 'blog_detail' post.slug %}" class="home-card-link">{{ ui_text.read_article }}</a>
+                </div>
+            </article>
             {% empty %}
-            <div class="col-span-12 text-[#fff]">{{ ui_text.add_blog_posts }}</div>
+            <div class="home-empty-note">{{ ui_text.add_blog_posts }}</div>
             {% endfor %}
         </div>
     </div>
