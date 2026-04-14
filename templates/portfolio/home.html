@@ -34,15 +34,17 @@
             <ul class="home-social-list">
                 {% for social in social_links|slice:":3" %}
                 <li>
+                    {% with social_name=social|tr:'name' %}
                     {% if social.url %}
-                    <a href="{{ social.url }}" rel="noopener noreferrer" aria-label="{{ social|tr:'name' }}" class="hero-social{% if forloop.counter == 2 %} s2{% elif forloop.counter == 3 %} s3{% endif %}">
-                        <i class="{{ social.hero_icon_class|default:social.icon_class }}" aria-hidden="true"></i>
+                    <a href="{{ social.url }}" rel="noopener noreferrer" aria-label="{{ social_name|default:ui_text.social_media }}" class="home-social-pill{% if forloop.counter == 2 %} is-secondary{% elif forloop.counter == 3 %} is-tertiary{% endif %}">
+                        {{ social_name|slice:":1"|upper|default:"S" }}
                     </a>
                     {% else %}
-                    <span class="hero-social{% if forloop.counter == 2 %} s2{% elif forloop.counter == 3 %} s3{% endif %}">
-                        <i class="{{ social.hero_icon_class|default:social.icon_class }}" aria-hidden="true"></i>
+                    <span class="home-social-pill{% if forloop.counter == 2 %} is-secondary{% elif forloop.counter == 3 %} is-tertiary{% endif %}">
+                        {{ social_name|slice:":1"|upper|default:"S" }}
                     </span>
                     {% endif %}
+                    {% endwith %}
                 </li>
                 {% empty %}
                 <li class="home-empty-note">{{ ui_text.add_social_links }}</li>
@@ -141,7 +143,7 @@
             {% for service in services %}
             <article class="home-card home-service-card">
                 <div class="home-service-icon">
-                    <i class="{{ service.icon_class }}" aria-hidden="true"></i>
+                    <span>{{ service|tr:'title'|slice:":1"|upper|default:"S" }}</span>
                 </div>
                 <div>
                     <h3>{{ service|tr:'title' }}</h3>

@@ -2,14 +2,15 @@ import shutil
 import tempfile
 from io import BytesIO
 from pathlib import Path
-from django.test import TestCase
+from django.core.exceptions import ValidationError
 from django.core.files.uploadedfile import SimpleUploadedFile
+from django.test import TestCase
 from django.test import override_settings
 from django.urls import reverse
 from PIL import Image
 from unittest.mock import patch
 
-from .models import BlogPost, ContactMessage, Project, SiteSettings
+from .models import Award, BlogPost, ContactMessage, Project, SiteSettings, Testimonial
 
 
 TEST_MEDIA_ROOT = Path(tempfile.gettempdir()) / 'my-web-test-media'
@@ -100,6 +101,78 @@ class PortfolioSmokeTests(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, '/media/site/about-upload')
+
+    def test_upload_only_images_are_valid_for_admin_managed_content(self):
+        test_cases = [
+            (
+                Award,
+                'awards',
+                {
+                    'title': 'Award Upload Only',
+                    'order': 10,
+                },
+            ),
+            (
+                Project,
+                'projects',
+                {
+                    'title': 'Upload First Project',
+                    'category': 'Branding',
+                    'short_description': 'Project saved with uploaded image only.',
+                    'description': 'Detailed description for uploaded-image project.',
+                    'client_name': 'Upload Client',
+                    'order': 10,
+                },
+            ),
+            (
+                Testimonial,
+                'testimonials',
+                {
+                    'name': 'Upload Client',
+                    'role': 'Marketing Lead',
+                    'quote': 'The admin upload flow works well now.',
+                    'order': 10,
+                },
+            ),
+            (
+                BlogPost,
+                'blog',
+                {
+                    'title': 'Uploaded News Card',
+                    'author_name': 'Admin',
+                    'summary': 'News item with only an uploaded image.',
+                    'content': 'News body.',
+                    'is_published': True,
+                },
+            ),
+        ]
+
+        for model_class, upload_dir, kwargs in test_cases:
+            with self.subTest(model=model_class.__name__):
+                instance = model_class(image_path='', **kwargs)
+                instance.image_path_file = SimpleUploadedFile(
+                    f'{model_class.__name__.lower()}.jpg',
+                    self.build_uploaded_image(size=(900, 600), color=(120, 150, 210)),
+                    content_type='image/jpeg',
+                )
+
+                instance.full_clean()
+                instance.save()
+
+                self.assertEqual(instance.image_path, '')
+                self.assertIn(f'/media/{upload_dir}/', instance.get_asset_url('image_path'))
+
+    def test_image_validation_requires_static_path_or_uploaded_file(self):
+        instance = Project(
+            title='Missing Image Source',
+            category='Web Design',
+            short_description='No image provided.',
+            description='This project should fail validation without image data.',
+            image_path='',
+        )
+
+        with self.assertRaises(ValidationError):
+            instance.full_clean()
 
     def test_default_logo_path_is_updated(self):
         self.assertEqual(SiteSettings.objects.first().logo_image, 'assets/images/site-logo.png')

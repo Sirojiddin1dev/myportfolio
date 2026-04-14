@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.utils.html import format_html
 
 from .models import (
     Award,
@@ -11,6 +12,24 @@ from .models import (
     SocialLink,
     Testimonial,
 )
+
+
+class UploadedAssetPreviewAdminMixin:
+    asset_field_name = None
+
+    @admin.display(description='Preview')
+    def image_preview(self, obj):
+        if not obj or not obj.pk:
+            return 'Save to preview the image.'
+
+        image_url = obj.get_asset_url(self.asset_field_name)
+        if not image_url:
+            return 'No image selected.'
+
+        return format_html(
+            '<img src="{}" alt="" style="max-height: 120px; border-radius: 8px; object-fit: cover;" />',
+            image_url,
+        )
 
 
 @admin.register(SiteSettings)
@@ -114,17 +133,46 @@ class ServiceAdmin(admin.ModelAdmin):
 
 
 @admin.register(Award)
-class AwardAdmin(admin.ModelAdmin):
+class AwardAdmin(UploadedAssetPreviewAdminMixin, admin.ModelAdmin):
+    asset_field_name = 'image_path'
     list_display = ('title', 'order')
     list_editable = ('order',)
+    readonly_fields = ('image_preview',)
+    fields = ('title', 'title_ru', 'title_uz', 'order', 'image_preview', 'image_path_file', 'image_path')
     search_fields = ('title', 'title_ru', 'title_uz')
 
 
 @admin.register(Project)
-class ProjectAdmin(admin.ModelAdmin):
+class ProjectAdmin(UploadedAssetPreviewAdminMixin, admin.ModelAdmin):
+    asset_field_name = 'image_path'
     list_display = ('title', 'category', 'client_name', 'is_featured', 'order')
     list_filter = ('is_featured', 'category')
     list_editable = ('is_featured', 'order')
+    readonly_fields = ('image_preview',)
+    fields = (
+        'title',
+        'title_ru',
+        'title_uz',
+        'slug',
+        'category',
+        'category_ru',
+        'category_uz',
+        'short_description',
+        'short_description_ru',
+        'short_description_uz',
+        'description',
+        'description_ru',
+        'description_uz',
+        'client_name',
+        'client_name_ru',
+        'client_name_uz',
+        'project_url',
+        'is_featured',
+        'order',
+        'image_preview',
+        'image_path_file',
+        'image_path',
+    )
     search_fields = (
         'title',
         'title_ru',
@@ -146,17 +194,56 @@ class ProjectAdmin(admin.ModelAdmin):
 
 
 @admin.register(Testimonial)
-class TestimonialAdmin(admin.ModelAdmin):
+class TestimonialAdmin(UploadedAssetPreviewAdminMixin, admin.ModelAdmin):
+    asset_field_name = 'image_path'
     list_display = ('name', 'role', 'order')
     list_editable = ('order',)
+    readonly_fields = ('image_preview',)
+    fields = (
+        'name',
+        'name_ru',
+        'name_uz',
+        'role',
+        'role_ru',
+        'role_uz',
+        'quote',
+        'quote_ru',
+        'quote_uz',
+        'order',
+        'image_preview',
+        'image_path_file',
+        'image_path',
+    )
     search_fields = ('name', 'name_ru', 'name_uz', 'role', 'role_ru', 'role_uz', 'quote', 'quote_ru', 'quote_uz')
 
 
 @admin.register(BlogPost)
-class BlogPostAdmin(admin.ModelAdmin):
+class BlogPostAdmin(UploadedAssetPreviewAdminMixin, admin.ModelAdmin):
+    asset_field_name = 'image_path'
     list_display = ('title', 'author_name', 'published_at', 'is_published')
     list_filter = ('is_published', 'published_at')
     list_editable = ('is_published',)
+    readonly_fields = ('image_preview',)
+    fields = (
+        'title',
+        'title_ru',
+        'title_uz',
+        'slug',
+        'author_name',
+        'author_name_ru',
+        'author_name_uz',
+        'summary',
+        'summary_ru',
+        'summary_uz',
+        'content',
+        'content_ru',
+        'content_uz',
+        'published_at',
+        'is_published',
+        'image_preview',
+        'image_path_file',
+        'image_path',
+    )
     search_fields = (
         'title',
         'title_ru',

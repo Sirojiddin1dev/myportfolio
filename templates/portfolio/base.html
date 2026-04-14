@@ -40,88 +40,76 @@
     <meta name="twitter:image" content="{{ seo.image }}">
     {% endif %}
     {% block extra_head %}{% endblock %}
+    <link href="{% static 'assets/css/site-optimizations.css' %}" rel="stylesheet">
+    {% if active_page != 'home' %}
     <link href="{% static 'assets/css/font-awesome.min.css' %}" rel="stylesheet">
     <link href="{% static 'assets/css/flaticon.css' %}" rel="stylesheet">
     <link href="{% static 'assets/css/themify-icons.css' %}" rel="stylesheet">
     <link href="{% static 'assets/css/global.css' %}" rel="stylesheet">
     <link href="{% static 'assets/css/style.css' %}" rel="stylesheet">
-    <link href="{% static 'assets/css/site-optimizations.css' %}" rel="stylesheet">
+    {% endif %}
     {% for schema in seo.schemas %}
     <script type="application/ld+json">{{ schema|safe }}</script>
     {% endfor %}
 </head>
-<body class="bg-[#070640]">
+<body>
     <a href="#main-content" class="skip-link">Skip to content</a>
-    <div class="page-wrapper">
-        <header class="{% if active_page == 'home' %}absolute left-0 top-0 w-full bg-[linear-gradient(180deg,rgba(7,6,64,0.96),rgba(7,6,64,0.82),rgba(7,6,64,0.18),transparent)] backdrop-blur-[2px]{% else %}bg-[#070640]{% endif %} z-50">
+    <div class="site-shell">
+        <header class="site-header{% if active_page == 'home' %} site-header-home{% endif %}">
             <div class="wraper">
-                <div class="flex items-center justify-between gap-[16px] py-[18px] lg:py-[14px] sm:py-[12px]">
-                    <div id="dl-menu" class="dl-menuwrapper">
-                        <button class="dl-trigger" type="button" aria-label="Open navigation menu" aria-controls="mobile-navigation" aria-expanded="false" data-menu-trigger>Open Menu</button>
-                        <ul id="mobile-navigation" class="dl-menu" data-menu>
-                            <li><a href="{% url 'home' %}">{{ ui_text.home }}</a></li>
-                            <li><a href="{% url 'about' %}">{{ ui_text.about }}</a></li>
-                            <li><a href="{% url 'portfolio' %}">{{ ui_text.portfolio }}</a></li>
-                            <li><a href="{% url 'blog_list' %}">{{ ui_text.blog }}</a></li>
-                            <li><a href="{% url 'contact' %}">{{ ui_text.contact }}</a></li>
-                            <li><a href="/admin/">{{ ui_text.admin }}</a></li>
-                            {% for code, label in available_languages %}
-                            <li><a href="{% url 'switch_language' language_code=code %}?next={{ request.path }}">{{ code|upper }}</a></li>
-                            {% endfor %}
-                        </ul>
-                    </div>
-                    <div class="w-[195px] md:w-[220px] sm:w-[180px] col:w-[150px] shrink-0">
-                        <a class="flex items-center md:justify-center text-white" href="{% url 'home' %}" aria-label="{{ site_settings|tr:'brand_name' }}">
-                            <img
-                                class="mr-[10px] max-h-[44px] w-auto max-w-full object-contain sm:max-h-[38px]"
-                                src="{{ site_settings|asset_url:'logo_image' }}"
-                                alt="{{ site_settings|tr:'brand_name' }}"
-                                width="{{ site_settings|asset_width:'logo_image' }}"
-                                height="{{ site_settings|asset_height:'logo_image' }}"
-                                loading="eager"
-                                fetchpriority="high"
-                                decoding="async"
-                            >
-                        </a>
-                    </div>
-                    <nav class="md:hidden" aria-label="Primary navigation">
-                        <ul>
-                            <li class="relative inline-block">
-                                <a href="{% url 'home' %}" class="relative text-[16px] lg:text-[14px] py-[20px] xl:py-[16px] px-[18px] xl:px-[6px] {% if active_page == 'home' %}text-[#fe3e57]{% else %}text-white{% endif %} block capitalize font-base-font font-medium transition-all hover:text-[#fe3e57]" {% if active_page == 'home' %}aria-current="page"{% endif %}>{{ ui_text.home }}</a>
-                            </li>
-                            <li class="relative inline-block">
-                                <a href="{% url 'about' %}" class="relative text-[16px] lg:text-[14px] py-[20px] xl:py-[16px] px-[18px] xl:px-[6px] {% if active_page == 'about' %}text-[#fe3e57]{% else %}text-white{% endif %} block capitalize font-base-font font-medium transition-all hover:text-[#fe3e57]" {% if active_page == 'about' %}aria-current="page"{% endif %}>{{ ui_text.about }}</a>
-                            </li>
-                            <li class="relative inline-block">
-                                <a href="{% url 'portfolio' %}" class="relative text-[16px] lg:text-[14px] py-[20px] xl:py-[16px] px-[18px] xl:px-[6px] {% if active_page == 'portfolio' %}text-[#fe3e57]{% else %}text-white{% endif %} block capitalize font-base-font font-medium transition-all hover:text-[#fe3e57]" {% if active_page == 'portfolio' %}aria-current="page"{% endif %}>{{ ui_text.portfolio }}</a>
-                            </li>
-                            <li class="relative inline-block">
-                                <a href="{% url 'blog_list' %}" class="relative text-[16px] lg:text-[14px] py-[20px] xl:py-[16px] px-[18px] xl:px-[6px] {% if active_page == 'blog' %}text-[#fe3e57]{% else %}text-white{% endif %} block capitalize font-base-font font-medium transition-all hover:text-[#fe3e57]" {% if active_page == 'blog' %}aria-current="page"{% endif %}>{{ ui_text.blog }}</a>
-                            </li>
-                            <li class="relative inline-block">
-                                <a href="{% url 'contact' %}" class="relative text-[16px] lg:text-[14px] py-[20px] xl:py-[16px] px-[18px] xl:px-[6px] {% if active_page == 'contact' %}text-[#fe3e57]{% else %}text-white{% endif %} block capitalize font-base-font font-medium transition-all hover:text-[#fe3e57]" {% if active_page == 'contact' %}aria-current="page"{% endif %}>{{ ui_text.contact }}</a>
-                            </li>
-                        </ul>
+                <div class="site-header-row">
+                    <button class="site-menu-toggle dl-trigger" type="button" aria-label="Open navigation menu" aria-controls="mobile-navigation" aria-expanded="false" data-menu-trigger>Menu</button>
+
+                    <a class="site-brand" href="{% url 'home' %}" aria-label="{{ site_settings|tr:'brand_name' }}">
+                        <img
+                            class="site-brand-image"
+                            src="{{ site_settings|asset_url:'logo_image' }}"
+                            alt="{{ site_settings|tr:'brand_name' }}"
+                            width="{{ site_settings|asset_width:'logo_image' }}"
+                            height="{{ site_settings|asset_height:'logo_image' }}"
+                            loading="eager"
+                            fetchpriority="high"
+                            decoding="async"
+                        >
+                    </a>
+
+                    <nav class="site-nav" aria-label="Primary navigation">
+                        <a href="{% url 'home' %}" class="site-nav-link{% if active_page == 'home' %} is-active{% endif %}" {% if active_page == 'home' %}aria-current="page"{% endif %}>{{ ui_text.home }}</a>
+                        <a href="{% url 'about' %}" class="site-nav-link{% if active_page == 'about' %} is-active{% endif %}" {% if active_page == 'about' %}aria-current="page"{% endif %}>{{ ui_text.about }}</a>
+                        <a href="{% url 'portfolio' %}" class="site-nav-link{% if active_page == 'portfolio' %} is-active{% endif %}" {% if active_page == 'portfolio' %}aria-current="page"{% endif %}>{{ ui_text.portfolio }}</a>
+                        <a href="{% url 'blog_list' %}" class="site-nav-link{% if active_page == 'blog' %} is-active{% endif %}" {% if active_page == 'blog' %}aria-current="page"{% endif %}>{{ ui_text.blog }}</a>
+                        <a href="{% url 'contact' %}" class="site-nav-link{% if active_page == 'contact' %} is-active{% endif %}" {% if active_page == 'contact' %}aria-current="page"{% endif %}>{{ ui_text.contact }}</a>
                     </nav>
-                    <div class="flex items-center gap-[12px]">
-                        <div class="hidden lg:flex items-center gap-[8px]">
+
+                    <div class="site-header-actions">
+                        <div class="desktop-language-switcher" aria-label="Language switcher">
                             {% for code, label in available_languages %}
-                            <a href="{% url 'switch_language' language_code=code %}?next={{ request.path }}" class="inline-flex h-[36px] w-[36px] items-center justify-center rounded-full border border-[#3840a9] text-[12px] font-semibold text-white {% if current_language == code %}bg-[#fe3e57] border-[#fe3e57]{% endif %}" aria-label="Switch language to {{ label }}">{{ code|upper }}</a>
+                            <a href="{% url 'switch_language' language_code=code %}?next={{ request.path }}" class="desktop-language-link{% if current_language == code %} is-active{% endif %}" aria-label="Switch language to {{ label }}">{{ code|upper }}</a>
                             {% endfor %}
                         </div>
-                        <a class="theme-btn col:hidden" href="{% url 'contact' %}">{{ site_settings|tr:'call_to_action_text' }}</a>
+                        <a class="theme-btn site-header-cta" href="{% url 'contact' %}">{{ site_settings|tr:'call_to_action_text' }}</a>
                     </div>
                 </div>
+
+                <ul id="mobile-navigation" class="site-mobile-menu dl-menu" data-menu>
+                    <li><a href="{% url 'home' %}">{{ ui_text.home }}</a></li>
+                    <li><a href="{% url 'about' %}">{{ ui_text.about }}</a></li>
+                    <li><a href="{% url 'portfolio' %}">{{ ui_text.portfolio }}</a></li>
+                    <li><a href="{% url 'blog_list' %}">{{ ui_text.blog }}</a></li>
+                    <li><a href="{% url 'contact' %}">{{ ui_text.contact }}</a></li>
+                    <li><a href="/admin/">{{ ui_text.admin }}</a></li>
+                    {% for code, label in available_languages %}
+                    <li><a href="{% url 'switch_language' language_code=code %}?next={{ request.path }}">{{ code|upper }} - {{ label }}</a></li>
+                    {% endfor %}
+                </ul>
             </div>
         </header>
 
         {% if messages %}
-        <section class="{% if active_page == 'home' %}bg-[#070640] pt-[120px] pb-[10px]{% else %}bg-[#070640] py-[20px]{% endif %}" aria-live="polite">
+        <section class="site-messages" aria-live="polite">
             <div class="wraper">
                 {% for message in messages %}
-                <div class="rounded-[5px] border border-[#fe3e57] bg-[rgba(254,62,87,0.08)] px-[20px] py-[15px] text-[#fff]" role="status">
-                    {{ message }}
-                </div>
+                <div class="site-message-item" role="status">{{ message }}</div>
                 {% endfor %}
             </div>
         </section>
@@ -131,66 +119,48 @@
             {% block content %}{% endblock %}
         </main>
 
-        <footer class="bg-[#121151]">
+        <footer class="site-footer">
             <div class="wraper">
-                <div class="py-[50px]">
-                    <div class="grid grid-cols-12 gap-8 lg:gap-3">
-                        <div class="col-span-2 md:col-span-4 sm:col-span-12">
-                            <div class="mt-[20px] sm:mt-[0px]">
-                                <img
-                                    class="max-h-[58px] w-auto max-w-full object-contain sm:mx-auto"
-                                    src="{{ site_settings|asset_url:'footer_logo_image' }}"
-                                    alt="{{ site_settings|tr:'brand_name' }}"
-                                    width="{{ site_settings|asset_width:'footer_logo_image' }}"
-                                    height="{{ site_settings|asset_height:'footer_logo_image' }}"
-                                    loading="lazy"
-                                    decoding="async"
-                                >
-                            </div>
-                        </div>
-                        <div class="col-span-6 md:col-span-8 sm:col-span-12">
-                            <div class="mt-[35px] text-center">
-                                <ul class="mb-[10px]">
-                                    <li class="inline-block"><a class="text-[#fff] px-[30px] sm:px-[10px] py-[10px] text-[15px] font-normal" href="{% url 'about' %}">{{ ui_text.about }}</a></li>
-                                    <li class="inline-block"><a class="text-[#fff] px-[30px] sm:px-[10px] py-[10px] text-[15px] font-normal" href="{% url 'portfolio' %}">{{ ui_text.portfolio }}</a></li>
-                                    <li class="inline-block"><a class="text-[#fff] px-[30px] sm:px-[10px] py-[10px] text-[15px] font-normal" href="{% url 'blog_list' %}">{{ ui_text.blog }}</a></li>
-                                    <li class="inline-block"><a class="text-[#fff] pl-[30px] sm:px-[10px] py-[10px] pr-[0px] text-[15px] font-normal" href="{% url 'contact' %}">{{ ui_text.contact }}</a></li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="col-span-4 md:col-span-12 sm:col-span-12">
-                            <div class="text-right md:text-center md:mt-[30px]">
-                                <ul class="flex items-end md:items-center md:w-full md:justify-center">
-                                    {% for social in social_links|slice:":3" %}
-                                    <li class="{% if not forloop.last %}mr-[30px]{% endif %}">
-                                        {% if social.url %}
-                                        <a href="{{ social.url }}" rel="noopener noreferrer" aria-label="{{ social|tr:'name' }}" class="block w-[80px] h-[80px] leading-[85px] sm:w-[60px] sm:h-[60px] sm:leading-[65px] border-[1px] border-[#3840a9] text-center rounded-[50%]">
-                                            <i class="{{ social.icon_class }} text-[30px] sm:text-[20px]" style="color: {{ social.accent_color }};" aria-hidden="true"></i>
-                                        </a>
-                                        {% else %}
-                                        <span class="block w-[80px] h-[80px] leading-[85px] sm:w-[60px] sm:h-[60px] sm:leading-[65px] border-[1px] border-[#3840a9] text-center rounded-[50%] opacity-70">
-                                            <i class="{{ social.icon_class }} text-[30px] sm:text-[20px]" style="color: {{ social.accent_color }};" aria-hidden="true"></i>
-                                        </span>
-                                        {% endif %}
-                                    </li>
-                                    {% empty %}
-                                    <li class="text-[#fff]">{{ ui_text.add_social_links }}</li>
-                                    {% endfor %}
-                                </ul>
-                            </div>
-                        </div>
+                <div class="site-footer-top">
+                    <div class="site-footer-brand">
+                        <img
+                            class="site-footer-logo"
+                            src="{{ site_settings|asset_url:'footer_logo_image' }}"
+                            alt="{{ site_settings|tr:'brand_name' }}"
+                            width="{{ site_settings|asset_width:'footer_logo_image' }}"
+                            height="{{ site_settings|asset_height:'footer_logo_image' }}"
+                            loading="lazy"
+                            decoding="async"
+                        >
                     </div>
+                    <nav class="site-footer-nav" aria-label="Footer navigation">
+                        <a href="{% url 'about' %}">{{ ui_text.about }}</a>
+                        <a href="{% url 'portfolio' %}">{{ ui_text.portfolio }}</a>
+                        <a href="{% url 'blog_list' %}">{{ ui_text.blog }}</a>
+                        <a href="{% url 'contact' %}">{{ ui_text.contact }}</a>
+                    </nav>
+                    <ul class="site-footer-social">
+                        {% for social in social_links|slice:":3" %}
+                        {% with social_name=social|tr:'name' %}
+                        <li>
+                            {% if social.url %}
+                            <a href="{{ social.url }}" rel="noopener noreferrer" aria-label="{{ social_name|default:ui_text.social_media }}" class="site-social-link">{{ social_name|slice:":1"|upper|default:"S" }}</a>
+                            {% else %}
+                            <span class="site-social-link site-social-muted">{{ social_name|slice:":1"|upper|default:"S" }}</span>
+                            {% endif %}
+                        </li>
+                        {% endwith %}
+                        {% empty %}
+                        <li class="home-empty-note">{{ ui_text.add_social_links }}</li>
+                        {% endfor %}
+                    </ul>
                 </div>
             </div>
-            <div class="py-[30px] bg-[#0d0c4c] text-center">
-                <span class="text-[#fff]">{{ site_settings|tr:'copyright_text' }}</span>
-            </div>
+            <div class="site-footer-bottom">{{ site_settings|tr:'copyright_text' }}</div>
         </footer>
     </div>
 
-    <a href="#main-content" class="back-to-top" data-back-to-top aria-label="Back to top">
-        <i class="ti-arrow-up" aria-hidden="true"></i>
-    </a>
+    <a href="#main-content" class="back-to-top" data-back-to-top aria-label="Back to top">↑</a>
 
     <script src="{% static 'assets/js/site.js' %}" defer></script>
     {% block extra_scripts %}{% endblock %}

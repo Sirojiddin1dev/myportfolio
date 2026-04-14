@@ -1,6 +1,7 @@
 import logging
 
 from django.conf import settings
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.templatetags.static import static
 from django.utils import timezone
@@ -38,6 +39,27 @@ class AssetFallbackMixin:
         if fallback_path.startswith(('http://', 'https://', '/')):
             return fallback_path
         return static(fallback_path)
+
+
+class RequiredAssetSourceMixin(models.Model):
+    required_asset_fields = ()
+
+    class Meta:
+        abstract = True
+
+    def clean(self):
+        super().clean()
+        errors = {}
+        for field_name in self.required_asset_fields:
+            fallback_path = getattr(self, field_name, '')
+            uploaded_asset = getattr(self, f'{field_name}_file', None)
+            if fallback_path or uploaded_asset:
+                continue
+            error_message = 'Upload an image or provide a static asset path.'
+            errors[field_name] = error_message
+            errors[f'{field_name}_file'] = error_message
+        if errors:
+            raise ValidationError(errors)
 
 
 class UploadedImageOptimizationMixin(models.Model):
@@ -275,18 +297,27 @@ class Service(UploadedImageOptimizationMixin, AssetFallbackMixin, TimeStampedMod
         return self.title
 
 
-class Award(UploadedImageOptimizationMixin, AssetFallbackMixin, TimeStampedModel, TranslatableModel):
+class Award(
+    UploadedImageOptimizationMixin,
+    AssetFallbackMixin,
+    RequiredAssetSourceMixin,
+    TimeStampedModel,
+    TranslatableModel,
+):
+    required_asset_fields = ('image_path',)
+
     title = models.CharField(max_length=120)
     title_ru = models.CharField(max_length=120, blank=True)
     title_uz = models.CharField(max_length=120, blank=True)
     image_path = models.CharField(
         max_length=255,
-        help_text='Static asset path inside the bundled template.',
+        blank=True,
+        help_text='Optional static asset path. Leave blank if you upload an image below.',
     )
-    image_path_file = models.FileField(
+    image_path_file = models.ImageField(
         upload_to='awards/',
         blank=True,
-        help_text='Optional uploaded image. If empty, the static path above is used.',
+        help_text='Upload an image from admin. If empty, the static path above is used.',
     )
     order = models.PositiveSmallIntegerField(default=0)
 
@@ -297,7 +328,15 @@ class Award(UploadedImageOptimizationMixin, AssetFallbackMixin, TimeStampedModel
         return self.title
 
 
-class Project(UploadedImageOptimizationMixin, AssetFallbackMixin, TimeStampedModel, TranslatableModel):
+class Project(
+    UploadedImageOptimizationMixin,
+    AssetFallbackMixin,
+    RequiredAssetSourceMixin,
+    TimeStampedModel,
+    TranslatableModel,
+):
+    required_asset_fields = ('image_path',)
+
     title = models.CharField(max_length=150)
     title_ru = models.CharField(max_length=150, blank=True)
     title_uz = models.CharField(max_length=150, blank=True)
@@ -313,12 +352,13 @@ class Project(UploadedImageOptimizationMixin, AssetFallbackMixin, TimeStampedMod
     description_uz = models.TextField(blank=True)
     image_path = models.CharField(
         max_length=255,
-        help_text='Static asset path inside the bundled template.',
+        blank=True,
+        help_text='Optional static asset path. Leave blank if you upload an image below.',
     )
-    image_path_file = models.FileField(
+    image_path_file = models.ImageField(
         upload_to='projects/',
         blank=True,
-        help_text='Optional uploaded image. If empty, the static path above is used.',
+        help_text='Upload an image from admin. If empty, the static path above is used.',
     )
     client_name = models.CharField(max_length=120, blank=True)
     client_name_ru = models.CharField(max_length=120, blank=True)
@@ -339,7 +379,15 @@ class Project(UploadedImageOptimizationMixin, AssetFallbackMixin, TimeStampedMod
         return self.title
 
 
-class Testimonial(UploadedImageOptimizationMixin, AssetFallbackMixin, TimeStampedModel, TranslatableModel):
+class Testimonial(
+    UploadedImageOptimizationMixin,
+    AssetFallbackMixin,
+    RequiredAssetSourceMixin,
+    TimeStampedModel,
+    TranslatableModel,
+):
+    required_asset_fields = ('image_path',)
+
     name = models.CharField(max_length=120)
     name_ru = models.CharField(max_length=120, blank=True)
     name_uz = models.CharField(max_length=120, blank=True)
@@ -351,12 +399,13 @@ class Testimonial(UploadedImageOptimizationMixin, AssetFallbackMixin, TimeStampe
     quote_uz = models.TextField(blank=True)
     image_path = models.CharField(
         max_length=255,
-        help_text='Static asset path inside the bundled template.',
+        blank=True,
+        help_text='Optional static asset path. Leave blank if you upload an image below.',
     )
-    image_path_file = models.FileField(
+    image_path_file = models.ImageField(
         upload_to='testimonials/',
         blank=True,
-        help_text='Optional uploaded image. If empty, the static path above is used.',
+        help_text='Upload an image from admin. If empty, the static path above is used.',
     )
     order = models.PositiveSmallIntegerField(default=0)
 
@@ -367,7 +416,15 @@ class Testimonial(UploadedImageOptimizationMixin, AssetFallbackMixin, TimeStampe
         return self.name
 
 
-class BlogPost(UploadedImageOptimizationMixin, AssetFallbackMixin, TimeStampedModel, TranslatableModel):
+class BlogPost(
+    UploadedImageOptimizationMixin,
+    AssetFallbackMixin,
+    RequiredAssetSourceMixin,
+    TimeStampedModel,
+    TranslatableModel,
+):
+    required_asset_fields = ('image_path',)
+
     title = models.CharField(max_length=160)
     title_ru = models.CharField(max_length=160, blank=True)
     title_uz = models.CharField(max_length=160, blank=True)
@@ -383,12 +440,13 @@ class BlogPost(UploadedImageOptimizationMixin, AssetFallbackMixin, TimeStampedMo
     content_uz = models.TextField(blank=True)
     image_path = models.CharField(
         max_length=255,
-        help_text='Static asset path inside the bundled template.',
+        blank=True,
+        help_text='Optional static asset path. Leave blank if you upload an image below.',
     )
-    image_path_file = models.FileField(
+    image_path_file = models.ImageField(
         upload_to='blog/',
         blank=True,
-        help_text='Optional uploaded image. If empty, the static path above is used.',
+        help_text='Upload an image from admin. If empty, the static path above is used.',
     )
     published_at = models.DateField(default=timezone.now)
     is_published = models.BooleanField(default=True)
